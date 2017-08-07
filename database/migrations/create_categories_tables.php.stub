@@ -1,0 +1,38 @@
+<?php
+
+use Kalnoy\Nestedset\NestedSet;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateCategoriesTables extends Migration
+{
+    public function up()
+    {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->string('slug');
+            $table->text('description')->nullable();
+            $table->text('content')->nullable();
+            NestedSet::columns($table);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('categorizables', function (Blueprint $table) {
+            $table->integer('category_model_id')->unsigned();
+            $table->integer('categorizable_id')->unsigned();
+            $table->string('categorizable_type');
+            $table->timestamps();
+
+            $table->unique(['category_model_id', 'categorizable_id', 'categorizable_type'], 'categorizables_ids_type_unique');
+            $table->foreign('category_model_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('categories');
+        Schema::dropIfExists('categorizables');
+    }
+}

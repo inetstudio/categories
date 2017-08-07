@@ -1,0 +1,25 @@
+{
+    "name": "inetstudio/categories",
+    "description": "Package for categories",
+    "homepage": "https://github.com/inetstudio/categories",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Konstantin Bukin",
+        "email": "bukin@inetstudio.ru"
+      }
+    ],
+    "require": {
+      "cviebrock/eloquent-sluggable": "^4.2",
+      "inetstudio/admin-panel": "1.*",
+      "kalnoy/nestedset": "^4.2",
+      "phoenix/eloquent-meta": "1.6.*",
+      "spatie/laravel-medialibrary": "^5.0.0",
+      "venturecraft/revisionable": "1.*"
+    },
+    "autoload": {
+      "psr-4": {
+        "InetStudio\\Categories\\": "src/"
+      }
+    }
+}
