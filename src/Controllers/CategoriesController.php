@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Categories\Models\CategoryModel;
-use InetStudio\Categories\Requests\SaveCategoryRequest;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use InetStudio\Categories\Requests\SaveCategoryRequest;
 
 /**
  * Контроллер для управления категориями.
@@ -141,13 +141,13 @@ class CategoriesController extends Controller
                 $filename = $properties['filename'];
 
                 array_forget($properties, 'base64');
-                array_forget($properties,'filename');
+                array_forget($properties, 'filename');
             }
 
             if (isset($image) && isset($filename)) {
                 if (isset($properties['type']) && $properties['type'] == 'single') {
                     $item->clearMediaCollection($name);
-                    array_forget($properties,'type');
+                    array_forget($properties, 'type');
                 }
 
                 $properties = array_filter($properties);
@@ -159,7 +159,7 @@ class CategoriesController extends Controller
                     ->toMediaCollection($name, 'categories');
             } else {
                 if (isset($properties['type']) && $properties['type'] == 'single') {
-                    array_forget($properties,'type');
+                    array_forget($properties, 'type');
 
                     $properties = array_filter($properties);
 

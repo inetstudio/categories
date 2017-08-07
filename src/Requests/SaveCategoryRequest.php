@@ -57,7 +57,7 @@ class SaveCategoryRequest extends FormRequest
             'meta.og:title' => 'max:255',
             'meta.og:description' => 'max:255',
             'title' => 'required|max:255',
-            'slug' => 'required|alpha_dash|max:255|unique:categories,slug,' .$request->get('category_id'),
+            'slug' => 'required|alpha_dash|max:255|unique:categories,slug,'.$request->get('category_id'),
         ];
     }
 }

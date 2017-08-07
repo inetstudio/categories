@@ -25,7 +25,6 @@ trait HasCategories
     public static function getCategoryClassName(): string
     {
         return CategoryModel::class;
-
     }
 
     /**
@@ -38,7 +37,6 @@ trait HasCategories
         return $this->morphToMany(static::getCategoryClassName(), 'categorizable')->withTimestamps();
     }
 
-
     /**
      * Attach the given category(ies) to the model.
      *
@@ -50,6 +48,7 @@ trait HasCategories
     {
         if (! $this->exists) {
             $this->queuedCategories = $categories;
+
             return;
         }
 
