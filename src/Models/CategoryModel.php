@@ -58,7 +58,6 @@ class CategoryModel extends Model implements HasMedia
     use SoftDeletes;
     use HasMediaTrait;
     use RevisionableTrait;
-
     use Sluggable, NodeTrait {
         NodeTrait::replicate as replicateNode;
         Sluggable::replicate as replicateSlug;
