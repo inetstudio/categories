@@ -168,7 +168,7 @@ class CategoriesController extends Controller
                     ->withCustomProperties($properties)
                     ->usingName(pathinfo($filename, PATHINFO_FILENAME))
                     ->usingFileName(md5($image).'.'.pathinfo($filename, PATHINFO_EXTENSION))
-                    ->toMediaCollection($name, 'tags');
+                    ->toMediaCollection($name, 'categories');
             } else {
                 if (isset($properties['type']) && $properties['type'] == 'single') {
                     array_forget($properties, 'type');
