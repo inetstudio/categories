@@ -25,7 +25,9 @@ class CategoriesController extends Controller
     {
         $tree = CategoryModel::getTree();
 
-        return view('admin.module.categories::pages.categories.index', ['tree' => $tree]);
+        return view('admin.module.categories::pages.categories.index', [
+            'tree' => $tree,
+        ]);
     }
 
     /**
@@ -62,21 +64,15 @@ class CategoriesController extends Controller
      */
     public function edit($id = null)
     {
-        if (! is_null($id) && $id > 0) {
-            $item = CategoryModel::where('id', '=', $id)->first();
-        } else {
-            abort(404);
-        }
-
-        if (empty($item)) {
-            abort(404);
-        } else {
+        if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
             $tree = CategoryModel::getTree();
 
             return view('admin.module.categories::pages.categories.form', [
                 'item' => $item,
                 'tree' => $tree,
             ]);
+        } else {
+            abort(404);
         }
     }
 
@@ -95,21 +91,16 @@ class CategoriesController extends Controller
     /**
      * Сохранение категории.
      *
-     * @param $request
+     * @param SaveCategoryRequest $request
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
     private function save($request, $id = null)
     {
-        if (! is_null($id) && $id > 0) {
-            $edit = true;
-            $item = CategoryModel::where('id', '=', $id)->first();
-
-            if (empty($item)) {
-                abort(404);
-            }
+        if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
+            $action = 'отредактирована';
         } else {
-            $edit = false;
+            $action = 'создана';
             $item = new CategoryModel();
         }
 
@@ -124,42 +115,63 @@ class CategoriesController extends Controller
         if ($parentId == 0) {
             $item->saveAsRoot();
         } else {
-            $item->appendToNode(CategoryModel::where('id', '=', $parentId)->first())->save();
+            $item->appendToNode(CategoryModel::find($parentId))->save();
         }
 
+        $this->saveMeta($item, $request);
+        $this->saveImages($item, $request, ['og_image']);
+
+        Session::flash('success', 'Категория «'.$item->title.'» успешно '.$action);
+
+        return redirect()->to(route('back.categories.edit', $item->fresh()->id));
+    }
+
+    /**
+     * Сохраняем мета теги.
+     *
+     * @param CategoryModel $item
+     * @param SaveCategoryRequest $request
+     */
+    private function saveMeta($item, $request)
+    {
         if ($request->has('meta')) {
             foreach ($request->get('meta') as $key => $value) {
                 $item->updateMeta($key, $value);
             }
         }
+    }
 
-        foreach (['og_image'] as $name) {
+    /**
+     * Сохраняем изображения.
+     *
+     * @param CategoryModel $item
+     * @param SaveCategoryRequest $request
+     * @param array $images
+     */
+    private function saveImages($item, $request, $images)
+    {
+        foreach ($images as $name) {
             $properties = $request->get($name);
 
-            if (isset($properties['base64'])) {
+            if (isset($properties['base64']) && isset($properties['filename'])) {
                 $image = $properties['base64'];
                 $filename = $properties['filename'];
 
-                array_forget($properties, 'base64');
-                array_forget($properties,'filename');
-            }
-
-            if (isset($image) && isset($filename)) {
                 if (isset($properties['type']) && $properties['type'] == 'single') {
                     $item->clearMediaCollection($name);
-                    array_forget($properties,'type');
                 }
 
+                array_forget($properties, ['type', 'base64', 'filename']);
                 $properties = array_filter($properties);
 
                 $item->addMediaFromBase64($image)
                     ->withCustomProperties($properties)
                     ->usingName(pathinfo($filename, PATHINFO_FILENAME))
                     ->usingFileName(md5($image).'.'.pathinfo($filename, PATHINFO_EXTENSION))
-                    ->toMediaCollection($name, 'categories');
+                    ->toMediaCollection($name, 'tags');
             } else {
                 if (isset($properties['type']) && $properties['type'] == 'single') {
-                    array_forget($properties,'type');
+                    array_forget($properties, 'type');
 
                     $properties = array_filter($properties);
 
@@ -169,11 +181,6 @@ class CategoriesController extends Controller
                 }
             }
         }
-
-        $action = ($edit) ? 'отредактирована' : 'создана';
-        Session::flash('success', 'Категория «'.$item->title.'» успешно '.$action);
-
-        return redirect()->to(route('back.categories.edit', $item->fresh()->id));
     }
 
     /**
@@ -184,25 +191,17 @@ class CategoriesController extends Controller
      */
     public function destroy($id = null)
     {
-        if (! is_null($id) && $id > 0) {
-            $item = CategoryModel::where('id', '=', $id)->first();
+        if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
+            $item->delete();
+
+            return response()->json([
+                'success' => true,
+            ]);
         } else {
             return response()->json([
                 'success' => false,
             ]);
         }
-
-        if (empty($item)) {
-            return response()->json([
-                'success' => false,
-            ]);
-        }
-
-        $item->delete();
-
-        return response()->json([
-            'success' => true,
-        ]);
     }
 
     /**
@@ -228,6 +227,8 @@ class CategoriesController extends Controller
     public function getSuggestions(Request $request)
     {
         $search = $request->get('q');
+        $data = [];
+
         $data['items'] = CategoryModel::select(['id', 'title as name'])->where('title', 'LIKE', '%'.$search.'%')->get()->toArray();
 
         return response()->json($data);

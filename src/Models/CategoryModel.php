@@ -13,6 +13,45 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
 
+/**
+ * InetStudio\Categories\Models\CategoryModel
+ *
+ * @property int $id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $content
+ * @property int $_lft
+ * @property int $_rgt
+ * @property int|null $parent_id
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
+ * @property-read \Kalnoy\Nestedset\Collection|\InetStudio\Categories\Models\CategoryModel[] $children
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
+ * @property-read \InetStudio\Categories\Models\CategoryModel|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel d()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel findSimilarSlugs(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel onlyTrashed()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereRgt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withoutTrashed()
+ * @mixin \Eloquent
+ */
 class CategoryModel extends Model implements HasMedia
 {
     use MetaTrait;
@@ -73,44 +112,18 @@ class CategoryModel extends Model implements HasMedia
      * Правила для транслита.
      *
      * @param Slugify $engine
-     * @param $attribute
      * @return Slugify
      */
-    public function customizeSlugEngine(Slugify $engine, $attribute)
+    public function customizeSlugEngine(Slugify $engine)
     {
-        $engine->addRule('а', 'a');
-        $engine->addRule('б', 'b');
-        $engine->addRule('в', 'v');
-        $engine->addRule('г', 'g');
-        $engine->addRule('д', 'd');
-        $engine->addRule('е', 'e');
-        $engine->addRule('ё', 'jo');
-        $engine->addRule('ж', 'zh');
-        $engine->addRule('з', 'z');
-        $engine->addRule('и', 'i');
-        $engine->addRule('й', 'j');
-        $engine->addRule('к', 'k');
-        $engine->addRule('л', 'l');
-        $engine->addRule('м', 'm');
-        $engine->addRule('н', 'n');
-        $engine->addRule('о', 'o');
-        $engine->addRule('п', 'p');
-        $engine->addRule('р', 'r');
-        $engine->addRule('с', 's');
-        $engine->addRule('т', 't');
-        $engine->addRule('у', 'u');
-        $engine->addRule('ф', 'f');
-        $engine->addRule('х', 'h');
-        $engine->addRule('ц', 'c');
-        $engine->addRule('ч', 'ch');
-        $engine->addRule('ш', 'sh');
-        $engine->addRule('щ', 'shh');
-        $engine->addRule('ъ', '');
-        $engine->addRule('ы', 'y');
-        $engine->addRule('ь', '');
-        $engine->addRule('э', 'je');
-        $engine->addRule('ю', 'ju');
-        $engine->addRule('я', 'ja');
+        $rules = [
+            'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'jo', 'ж' => 'zh',
+            'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p',
+            'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch',
+            'ш' => 'sh', 'щ' => 'shh', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'je', 'ю' => 'ju', 'я' => 'ja',
+        ];
+
+        $engine->addRules($rules);
 
         return $engine;
     }
