@@ -11,6 +11,10 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views/admin', 'admin.module.categories');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
+        $this->publishes([
+            __DIR__.'/../public' => public_path(),
+        ], 'public');
+
         $this->mergeConfigFrom(
             __DIR__.'/../config/filesystems.php', 'filesystems.disks'
         );
@@ -22,6 +26,11 @@ class CategoriesServiceProvider extends ServiceProvider
                     __DIR__.'/../database/migrations/create_categories_tables.php.stub' => database_path('migrations/'.$timestamp.'_create_categories_tables.php'),
                 ], 'migrations');
             }
+
+            $this->commands([
+                Commands\SetupCommand::class,
+                Commands\CreateFoldersCommand::class,
+            ]);
         }
     }
 
@@ -32,8 +41,6 @@ class CategoriesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register('Phoenix\EloquentMeta\ServiceProvider');
-        $this->app->register('Cviebrock\EloquentSluggable\ServiceProvider');
-        $this->app->register('Spatie\MediaLibrary\MediaLibraryServiceProvider');
+
     }
 }
