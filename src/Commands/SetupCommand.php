@@ -26,27 +26,32 @@ class SetupCommand extends Command
      * @var array
      */
     protected $calls = [
-        'vendor:publish' => [
+        [
             'description' => 'Publish migrations',
+            'command' => 'vendor:publish',
             'params' => [
                 '--provider' => 'InetStudio\Categories\CategoriesServiceProvider',
                 '--tag' => 'migrations',
             ],
         ],
-        'migrate' => [
+        [
             'description' => 'Migration',
+            'command' => 'migrate',
             'params' => [],
         ],
-        'optimize' => [
+        [
             'description' => 'Optimize',
+            'command' => 'optimize',
             'params' => [],
         ],
-        'inetstudio:categories:folders' => [
+        [
             'description' => 'Create folders',
+            'command' => 'inetstudio:categories:folders',
             'params' => [],
         ],
-        'vendor:publish' => [
+        [
             'description' => 'Publish public',
+            'command' => 'vendor:publish',
             'params' => [
                 '--provider' => 'InetStudio\Categories\CategoriesServiceProvider',
                 '--tag' => 'public',
@@ -62,9 +67,9 @@ class SetupCommand extends Command
      */
     public function fire()
     {
-        foreach ($this->calls as $command => $info) {
+        foreach ($this->calls as $info) {
             $this->line(PHP_EOL.$info['description']);
-            $this->call($command, $info['params']);
+            $this->call($info['command'], $info['params']);
         }
     }
 }
