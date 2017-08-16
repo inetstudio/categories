@@ -11,8 +11,7 @@
     ],
     "require": {
       "inetstudio/admin-panel": "1.*",
-      "kalnoy/nestedset": "^4.2",
-      "venturecraft/revisionable": "1.*"
+      "kalnoy/nestedset": "^4.2"
     },
     "autoload": {
       "psr-4": {
