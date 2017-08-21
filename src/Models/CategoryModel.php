@@ -63,6 +63,8 @@ class CategoryModel extends Model implements HasMedia
         Sluggable::replicate as replicateSlug;
     }
 
+    const HREF = '/category/';
+
     /**
      * Связанная с моделью таблица.
      *
@@ -127,6 +129,16 @@ class CategoryModel extends Model implements HasMedia
         return $engine;
     }
 
+    /**
+     * Ссылка на категорию.
+     *
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public function getHrefAttribute()
+    {
+        return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
+    }
+
     public function replicate(array $except = null)
     {
         $instance = $this->replicateNode($except);
@@ -145,6 +157,7 @@ class CategoryModel extends Model implements HasMedia
             foreach ($categories as $category) {
                 $data[$category->id]['id'] = $category->id;
                 $data[$category->id]['name'] = $category->title;
+                $data[$category->id]['href'] = $category->href;
                 $data[$category->id]['items'] = $traverse($category->children);
             }
 
