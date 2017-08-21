@@ -10,9 +10,6 @@
     <!-- CROPPER -->
     <link href="{!! asset('admin/css/plugins/cropper/cropper.min.css') !!}" rel="stylesheet">
 
-    <!-- ICHECK -->
-    <link href="{!! asset('admin/css/plugins/iCheck/custom.css') !!}" rel="stylesheet">
-
     <!-- JSTREE -->
     <link href="{!! asset('admin/css/plugins/jstree/style.min.css') !!}" rel="stylesheet">
 @endsection
@@ -181,9 +178,6 @@
 @section('scripts')
     <!-- CROPPER -->
     <script src="{!! asset('admin/js/plugins/cropper/cropper.min.js') !!}"></script>
-
-    <!-- ICHECK -->
-    <script src="{!! asset('admin/js/plugins/iCheck/icheck.min.js') !!}"></script>
 
     <!-- JSTREE -->
     <script src="{!! asset('admin/js/plugins/jstree/jstree.min.js') !!}"></script>
