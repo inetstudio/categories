@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 
 /**
  * InetStudio\Categories\Models\CategoryModel
@@ -62,6 +63,7 @@ class CategoryModel extends Model implements HasMedia
         NodeTrait::replicate as replicateNode;
         Sluggable::replicate as replicateSlug;
     }
+    use SluggableScopeHelpers;
 
     const HREF = '/category/';
 
