@@ -167,12 +167,16 @@ class CategoriesController extends Controller
 
                         $file = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix().$image['tempname'];
 
-                        $item->addMedia($file)
+                        $media = $item->addMedia($file)
                             ->withCustomProperties($image['properties'])
                             ->usingName(pathinfo($filename, PATHINFO_FILENAME))
                             ->usingFileName($image['tempname'])
                             ->toMediaCollection($name, 'categories');
                     }
+
+                    $item->update([
+                        $name => str_replace($image['src'], '/img/' . $media->id, $item[$name]),
+                    ]);
                 }
             } else {
                 if (isset($properties['tempname']) && isset($properties['filename'])) {
