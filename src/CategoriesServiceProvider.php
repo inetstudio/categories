@@ -8,7 +8,7 @@ class CategoriesServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views/admin', 'admin.module.categories');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin.module.categories');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         $this->publishes([

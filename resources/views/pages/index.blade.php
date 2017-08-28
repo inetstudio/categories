@@ -14,7 +14,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.categories::partials.categories.breadcrumbs')
+        @include('admin.module.categories::partials.breadcrumbs')
     @endpush
 
     <div class="wrapper wrapper-content">
@@ -30,7 +30,7 @@
                             @if (count($tree) > 0)
                                 <ol class="dd-list">
                                     @foreach ($tree as $item)
-                                        @include('admin.module.categories::pages.categories.partials.index_category', $item)
+                                        @include('admin.module.categories::partials.tree.index_category', $item)
                                     @endforeach
                                 </ol>
                             @else

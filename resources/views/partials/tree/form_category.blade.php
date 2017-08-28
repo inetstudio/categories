@@ -3,7 +3,7 @@
     @if (count($item['items']) > 0)
         <ul>
             @foreach($item['items'] as $treeItem)
-                @include('admin.module.categories::pages.categories.partials.form_category', [
+                @include('admin.module.categories::partials.tree.form_category', [
                     'id' => 'parentCategoryId',
                     'item' => $treeItem,
                     'currentId' => $currentId,

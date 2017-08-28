@@ -26,7 +26,7 @@ class CategoriesController extends Controller
     {
         $tree = CategoryModel::getTree();
 
-        return view('admin.module.categories::pages.categories.index', [
+        return view('admin.module.categories::pages.index', [
             'tree' => $tree,
         ]);
     }
@@ -40,7 +40,7 @@ class CategoriesController extends Controller
     {
         $tree = CategoryModel::getTree();
 
-        return view('admin.module.categories::pages.categories.form', [
+        return view('admin.module.categories::pages.form', [
             'item' => new CategoryModel(),
             'tree' => $tree,
         ]);
@@ -68,7 +68,7 @@ class CategoriesController extends Controller
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
             $tree = CategoryModel::getTree();
 
-            return view('admin.module.categories::pages.categories.form', [
+            return view('admin.module.categories::pages.form', [
                 'item' => $item,
                 'tree' => $tree,
             ]);
