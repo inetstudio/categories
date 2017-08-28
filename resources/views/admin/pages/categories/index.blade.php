@@ -6,14 +6,16 @@
 
 @section('title', $title)
 
-@section('styles')
+@pushonce('styles:categories_custom')
     <!-- CUSTOM STYLE -->
     <link href="{!! asset('admin/css/modules/categories/custom.css') !!}" rel="stylesheet">
-@endsection
+@endpushonce
 
 @section('content')
 
-    @include('admin.module.categories::partials.breadcrumb_index', ['title' => $title])
+    @push('breadcrumbs')
+        @include('admin.module.categories::partials.breadcrumbs')
+    @endpush
 
     <div class="wrapper wrapper-content">
         <div class="row">
@@ -43,7 +45,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@pushonce('scripts:nestable')
     <!-- Nestable List -->
     <script src="{!! asset('admin/js/plugins/nestable/jquery.nestable.js') !!}"></script>
-@endsection
+@endpushonce
