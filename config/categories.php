@@ -20,6 +20,16 @@ return [
                     ],
                 ],
             ],
+            'content' => [
+                'default' => [
+                    [
+                        'name' => 'content_admin',
+                        'size' => [
+                            'width' => 140,
+                        ],
+                    ],
+                ],
+            ],
         ]
     ],
 ];
