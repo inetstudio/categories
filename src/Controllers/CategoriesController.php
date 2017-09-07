@@ -179,6 +179,25 @@ class CategoriesController extends Controller
                     ]);
                 }
             } else {
+                $manipulations = [];
+
+                if (isset($properties['crop']) and config('categories.images.conversions')) {
+                    foreach ($properties['crop'] as $key => $cropJSON) {
+                        $cropData = json_decode($cropJSON, true);
+
+                        foreach (config('categories.images.conversions.'.$name.'.'.$key) as $conversion) {
+                            $manipulations[$conversion['name']] = [
+                                'manualCrop' => implode(',', [
+                                    round($cropData['width']),
+                                    round($cropData['height']),
+                                    round($cropData['x']),
+                                    round($cropData['y']),
+                                ]),
+                            ];
+                        }
+                    }
+                }
+
                 if (isset($properties['tempname']) && isset($properties['filename'])) {
                     $image = $properties['tempname'];
                     $filename = $properties['filename'];
@@ -190,11 +209,14 @@ class CategoriesController extends Controller
 
                     $file = Storage::disk('temp')->getDriver()->getAdapter()->getPathPrefix().$image;
 
-                    $item->addMedia($file)
+                    $media = $item->addMedia($file)
                         ->withCustomProperties($properties)
                         ->usingName(pathinfo($filename, PATHINFO_FILENAME))
                         ->usingFileName($image)
                         ->toMediaCollection($name, 'categories');
+
+                    $media->manipulations = $manipulations;
+                    $media->save();
                 } else {
                     $properties = array_filter($properties);
 
@@ -202,6 +224,7 @@ class CategoriesController extends Controller
 
                     if ($media) {
                         $media->custom_properties = $properties;
+                        $media->manipulations = $manipulations;
                         $media->save();
                     }
                 }

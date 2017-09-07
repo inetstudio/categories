@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMedia;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
  * InetStudio\Categories\Models\CategoryModel
@@ -53,7 +53,7 @@ use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withoutTrashed()
  * @mixin \Eloquent
  */
-class CategoryModel extends Model implements HasMedia
+class CategoryModel extends Model implements HasMediaConversions
 {
     use MetaTrait;
     use SoftDeletes;
@@ -167,5 +167,24 @@ class CategoryModel extends Model implements HasMedia
         };
 
         return $traverse($tree);
+    }
+
+    public function registerMediaConversions()
+    {
+        $quality = (config('categories.images.quality')) ? config('categories.images.quality') : 75;
+
+        if (config('categories.images.conversions')) {
+            foreach (config('categories.images.conversions') as $collection => $image) {
+                foreach ($image as $crop) {
+                    foreach ($crop as $conversion) {
+                        $this->addMediaConversion($conversion['name'])
+                            ->quality($quality)
+                            ->width($conversion['size']['width'])
+                            ->height($conversion['size']['height'])
+                            ->performOnCollections($collection);
+                    }
+                }
+            }
+        }
     }
 }

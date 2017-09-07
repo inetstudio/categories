@@ -12,6 +12,10 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         $this->publishes([
+            __DIR__.'/../config/categories.php' => config_path('categories.php'),
+        ], 'config');
+
+        $this->publishes([
             __DIR__.'/../public' => public_path(),
         ], 'public');
 
