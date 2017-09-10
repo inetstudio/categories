@@ -27,12 +27,12 @@ class CreateFoldersCommand extends Command
      */
     public function fire()
     {
-        // TODO использовать конфиг
+        if (config('filesystems.disks.categories')) {
+            $path = config('filesystems.disks.categories.root');
 
-        $path = storage_path().'/app/public/categories';
-
-        if (! is_dir($path)) {
-            mkdir($path, 0777, true);
+            if (! is_dir($path)) {
+                mkdir($path, 0777, true);
+            }
         }
     }
 }

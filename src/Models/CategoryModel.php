@@ -29,6 +29,7 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
  * @property-read \Kalnoy\Nestedset\Collection|\InetStudio\Categories\Models\CategoryModel[] $children
+ * @property-read \Illuminate\Contracts\Routing\UrlGenerator|string $href
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
  * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
  * @property-read \InetStudio\Categories\Models\CategoryModel|null $parent
@@ -94,8 +95,10 @@ class CategoryModel extends Model implements HasMediaConversions
         'deleted_at',
     ];
 
+    protected $revisionCreationsEnabled = true;
+
     /**
-     * Return the sluggable configuration array for this model.
+     * Возвращаем конфиг для генерации slug модели.
      *
      * @return array
      */
@@ -108,8 +111,6 @@ class CategoryModel extends Model implements HasMediaConversions
             ],
         ];
     }
-
-    protected $revisionCreationsEnabled = true;
 
     /**
      * Правила для транслита.
@@ -149,6 +150,11 @@ class CategoryModel extends Model implements HasMediaConversions
         return $instance;
     }
 
+    /**
+     * Получаем дерево категорий.
+     *
+     * @return array
+     */
     public static function getTree()
     {
         $tree = self::defaultOrder()->get()->toTree();
@@ -169,6 +175,9 @@ class CategoryModel extends Model implements HasMediaConversions
         return $traverse($tree);
     }
 
+    /**
+     * Регистрируем преобразования изображений.
+     */
     public function registerMediaConversions()
     {
         $quality = (config('categories.images.quality')) ? config('categories.images.quality') : 75;
