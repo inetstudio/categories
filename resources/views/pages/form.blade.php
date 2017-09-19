@@ -145,7 +145,7 @@
                                             <p>Список категорий пуст.</p>
                                         @endif
 
-                                        {!! Form::hidden('parent_id', '') !!}
+                                        {!! Form::hidden('parent_id', intval($item->parent_id)) !!}
 
                                     </div>
                                 </div>
