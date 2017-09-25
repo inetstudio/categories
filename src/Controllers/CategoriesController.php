@@ -105,6 +105,8 @@ class CategoriesController extends Controller
             $item = new CategoryModel();
         }
 
+        \Event::fire('inetstudio.categories.childs.cache.clear', $item->parent_id);
+        
         $item->title = strip_tags($request->get('title'));
         $item->slug = strip_tags($request->get('slug'));
         $item->description = strip_tags($request->input('description.text'));
@@ -117,10 +119,14 @@ class CategoriesController extends Controller
             $item->saveAsRoot();
         } else {
             $item->appendToNode(CategoryModel::find($parentId))->save();
+
+            \Event::fire('inetstudio.categories.childs.cache.clear', $parentId);
         }
 
         $this->saveMeta($item, $request);
         $this->saveImages($item, $request, ['og_image', 'content']);
+
+        \Event::fire('inetstudio.categories.cache.clear', $item);
 
         Session::flash('success', 'Категория «'.$item->title.'» успешно '.$action);
 
@@ -139,6 +145,8 @@ class CategoriesController extends Controller
             foreach ($request->get('meta') as $key => $value) {
                 $item->updateMeta($key, $value);
             }
+
+            \Event::fire('inetstudio.seo.cache.clear', $item);
         }
     }
 
@@ -186,6 +194,9 @@ class CategoriesController extends Controller
                         $cropData = json_decode($cropJSON, true);
 
                         foreach (config('categories.images.conversions.'.$name.'.'.$key) as $conversion) {
+
+                            \Event::fire('inetstudio.images.cache.clear', $conversion['name'].'_'.md5(get_class($item).$item->id));
+
                             $manipulations[$conversion['name']] = [
                                 'manualCrop' => implode(',', [
                                     round($cropData['width']),
