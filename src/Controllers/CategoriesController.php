@@ -106,7 +106,7 @@ class CategoriesController extends Controller
         }
 
         \Event::fire('inetstudio.categories.childs.cache.clear', $item->parent_id);
-        
+
         $item->title = strip_tags($request->get('title'));
         $item->slug = strip_tags($request->get('slug'));
         $item->description = strip_tags($request->input('description.text'));
@@ -161,6 +161,8 @@ class CategoriesController extends Controller
     {
         foreach ($images as $name) {
             $properties = $request->get($name);
+
+            \Event::fire('inetstudio.images.cache.clear', $name.'_'.md5(get_class($item).$item->id));
 
             if (isset($properties['images'])) {
                 $item->clearMediaCollectionExcept($name, $properties['images']);
