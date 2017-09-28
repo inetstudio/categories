@@ -12,6 +12,7 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
@@ -65,6 +66,7 @@ class CategoryModel extends Model implements HasMediaConversions
         Sluggable::replicate as replicateSlug;
     }
     use SluggableScopeHelpers;
+    use HasSimpleCountersTrait;
 
     const HREF = '/category/';
 
