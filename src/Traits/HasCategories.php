@@ -60,7 +60,7 @@ trait HasCategories
      *
      * @return void
      */
-    public static function bootCategorizable()
+    public static function bootHasCategories()
     {
         static::created(function (Model $categorizableModel) {
             if ($categorizableModel->queuedCategories) {
