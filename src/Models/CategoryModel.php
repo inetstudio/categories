@@ -3,6 +3,7 @@
 namespace InetStudio\Categories\Models;
 
 use Cocur\Slugify\Slugify;
+use Spatie\MediaLibrary\Media;
 use Kalnoy\Nestedset\NodeTrait;
 use Phoenix\EloquentMeta\MetaTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -179,8 +180,10 @@ class CategoryModel extends Model implements HasMediaConversions
 
     /**
      * Регистрируем преобразования изображений.
+     *
+     * @param Media|null $media
      */
-    public function registerMediaConversions()
+    public function registerMediaConversions(Media $media = null)
     {
         $quality = (config('categories.images.quality')) ? config('categories.images.quality') : 75;
 
