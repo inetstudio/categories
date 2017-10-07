@@ -45,6 +45,5 @@ class CategoriesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }

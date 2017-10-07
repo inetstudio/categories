@@ -17,7 +17,7 @@ use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 
 /**
- * InetStudio\Categories\Models\CategoryModel
+ * InetStudio\Categories\Models\CategoryModel.
  *
  * @property int $id
  * @property string $title
@@ -142,7 +142,7 @@ class CategoryModel extends Model implements HasMediaConversions
      */
     public function getHrefAttribute()
     {
-        return url(self::HREF . (!empty($this->slug) ? $this->slug : $this->id));
+        return url(self::HREF.(! empty($this->slug) ? $this->slug : $this->id));
     }
 
     public function replicate(array $except = null)
