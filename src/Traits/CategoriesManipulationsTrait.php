@@ -14,7 +14,7 @@ trait CategoriesManipulationsTrait
      */
     private function saveCategories($item, $request)
     {
-        if ($request->has('categories')) {
+        if ($request->filled('categories')) {
             $categories = explode(',', $request->get('categories'));
             $item->recategorize(CategoryModel::whereIn('id', $categories)->get());
         } else {

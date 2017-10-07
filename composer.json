@@ -10,12 +10,19 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.4.*",
-      "kalnoy/nestedset": "^4.2"
+      "inetstudio/admin-panel": "1.5.*",
+      "kalnoy/nestedset": "^4.3"
     },
     "autoload": {
       "psr-4": {
         "InetStudio\\Categories\\": "src/"
+      }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "InetStudio\\Categories\\CategoriesServiceProvider"
+        ]
       }
     }
 }
