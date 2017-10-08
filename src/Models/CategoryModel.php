@@ -3,6 +3,7 @@
 namespace InetStudio\Categories\Models;
 
 use Cocur\Slugify\Slugify;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\Media;
 use Kalnoy\Nestedset\NodeTrait;
 use Phoenix\EloquentMeta\MetaTrait;
@@ -59,6 +60,7 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 class CategoryModel extends Model implements HasMediaConversions
 {
     use MetaTrait;
+    use Searchable;
     use SoftDeletes;
     use HasMediaTrait;
     use RevisionableTrait;
@@ -99,6 +101,18 @@ class CategoryModel extends Model implements HasMediaConversions
     ];
 
     protected $revisionCreationsEnabled = true;
+
+    /**
+     * Настройка полей для поиска.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $arr = array_only($this->toArray(), ['id', 'title', 'description', 'content']);
+
+        return $arr;
+    }
 
     /**
      * Возвращаем конфиг для генерации slug модели.
