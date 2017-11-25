@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Session;
 use InetStudio\Categories\Models\CategoryModel;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use InetStudio\Categories\Requests\SaveCategoryRequest;
-use InetStudio\AdminPanel\Traits\MetaManipulationsTrait;
-use InetStudio\AdminPanel\Traits\ImagesManipulationsTrait;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 
 /**
  * Контроллер для управления категориями.
