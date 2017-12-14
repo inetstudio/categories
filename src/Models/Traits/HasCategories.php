@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Categories\Traits;
+namespace InetStudio\Categories\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;

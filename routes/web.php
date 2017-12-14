@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => 'InetStudio\Categories\Controllers'], function () {
+Route::group(['namespace' => 'InetStudio\Categories\Http\Controllers\Back'], function () {
     Route::group(['middleware' => 'web', 'prefix' => 'back'], function () {
         Route::group(['middleware' => 'back.auth'], function () {
             Route::post('categories/move', 'CategoriesController@move')->name('back.categories.move');

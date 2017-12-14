@@ -14,7 +14,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.categories::partials.breadcrumbs')
+        @include('admin.module.categories::back.partials.breadcrumbs')
         <li>
             <a href="{{ route('back.categories.index') }}">Категории</a>
         </li>
@@ -130,7 +130,7 @@
                                                     <li id="parentCategoryId_0" data-jstree='{"opened":true @if (intval($item->parent_id) == 0),"selected":true @endif}'>Категории
                                                         <ul>
                                                             @foreach ($tree as $treeItem)
-                                                                @include('admin.module.categories::partials.tree.form_category', [
+                                                                @include('admin.module.categories::back.partials.tree.form_category', [
                                                                     'id' => 'parentCategoryId',
                                                                     'item' => $treeItem,
                                                                     'currentId' => $item->id,

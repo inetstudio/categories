@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Categories\Traits;
+namespace InetStudio\Categories\Http\Controllers\Back\Traits;
 
 use InetStudio\Categories\Models\CategoryModel;
 

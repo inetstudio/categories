@@ -1,38 +1,38 @@
 <?php
 
-namespace InetStudio\Categories\Commands;
+namespace InetStudio\Categories\Console\Commands;
 
 use Illuminate\Console\Command;
 
 class SetupCommand extends Command
 {
     /**
-     * The console command name.
+     * Имя команды.
      *
      * @var string
      */
     protected $name = 'inetstudio:categories:setup';
 
     /**
-     * The console command description.
+     * Описание команды.
      *
      * @var string
      */
     protected $description = 'Setup categories package';
 
     /**
-     * Commands to call with their description.
+     * Список дополнительных команд.
      *
      * @var array
      */
     protected $calls = [];
 
     /**
-     * Execute the console command.
+     * Запуск команды.
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->initCommands();
 
@@ -51,14 +51,14 @@ class SetupCommand extends Command
      *
      * @return void
      */
-    private function initCommands()
+    private function initCommands(): void
     {
         $this->calls = [
             [
                 'description' => 'Publish migrations',
                 'command' => 'vendor:publish',
                 'params' => [
-                    '--provider' => 'InetStudio\Categories\CategoriesServiceProvider',
+                    '--provider' => 'InetStudio\Categories\Providers\CategoriesServiceProvider',
                     '--tag' => 'migrations',
                 ],
             ],
@@ -76,7 +76,7 @@ class SetupCommand extends Command
                 'description' => 'Publish public',
                 'command' => 'vendor:publish',
                 'params' => [
-                    '--provider' => 'InetStudio\Categories\CategoriesServiceProvider',
+                    '--provider' => 'InetStudio\Categories\Providers\CategoriesServiceProvider',
                     '--tag' => 'public',
                     '--force' => true,
                 ],
@@ -85,7 +85,7 @@ class SetupCommand extends Command
                 'description' => 'Publish config',
                 'command' => 'vendor:publish',
                 'params' => [
-                    '--provider' => 'InetStudio\Categories\CategoriesServiceProvider',
+                    '--provider' => 'InetStudio\Categories\Providers\CategoriesServiceProvider',
                     '--tag' => 'config',
                 ],
             ],

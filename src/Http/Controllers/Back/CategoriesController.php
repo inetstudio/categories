@@ -1,13 +1,17 @@
 <?php
 
-namespace InetStudio\Categories\Controllers;
+namespace InetStudio\Categories\Http\Controllers\Back;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Categories\Models\CategoryModel;
+use InetStudio\Categories\Events\ModifyCategoryEvent;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use InetStudio\Categories\Requests\SaveCategoryRequest;
+use InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 
@@ -26,11 +30,11 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(): View
     {
         $tree = CategoryModel::getTree();
 
-        return view('admin.module.categories::pages.index', [
+        return view('admin.module.categories::back.pages.index', [
             'tree' => $tree,
         ]);
     }
@@ -40,11 +44,11 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         $tree = CategoryModel::getTree();
 
-        return view('admin.module.categories::pages.form', [
+        return view('admin.module.categories::back.pages.form', [
             'item' => new CategoryModel(),
             'tree' => $tree,
         ]);
@@ -56,7 +60,7 @@ class CategoriesController extends Controller
      * @param SaveCategoryRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveCategoryRequest $request)
+    public function store(SaveCategoryRequest $request): RedirectResponse
     {
         return $this->save($request);
     }
@@ -67,12 +71,12 @@ class CategoriesController extends Controller
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id = null)
+    public function edit($id = null): View
     {
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
             $tree = CategoryModel::getTree();
 
-            return view('admin.module.categories::pages.form', [
+            return view('admin.module.categories::back.pages.form', [
                 'item' => $item,
                 'tree' => $tree,
             ]);
@@ -88,7 +92,7 @@ class CategoriesController extends Controller
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveCategoryRequest $request, $id = null)
+    public function update(SaveCategoryRequest $request, $id = null): RedirectResponse
     {
         return $this->save($request, $id);
     }
@@ -100,7 +104,7 @@ class CategoriesController extends Controller
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function save($request, $id = null)
+    private function save(SaveCategoryRequest $request, $id = null): RedirectResponse
     {
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
             $action = 'отредактирована';
@@ -109,7 +113,7 @@ class CategoriesController extends Controller
             $item = new CategoryModel();
         }
 
-        \Event::fire('inetstudio.categories.childs.cache.clear', $item->parent_id);
+        $oldParent = $item->parent;
 
         $item->title = strip_tags($request->get('title'));
         $item->slug = strip_tags($request->get('slug'));
@@ -123,18 +127,18 @@ class CategoriesController extends Controller
             $item->saveAsRoot();
         } else {
             $item->appendToNode(CategoryModel::find($parentId))->save();
-
-            \Event::fire('inetstudio.categories.childs.cache.clear', $parentId);
         }
+
+        $newParent = $item->parent;
 
         $this->saveMeta($item, $request);
         $this->saveImages($item, $request, ['og_image', 'content'], 'categories');
 
-        \Event::fire('inetstudio.categories.cache.clear', $item);
+        event(new ModifyCategoryEvent($item, $oldParent, $newParent));
 
         Session::flash('success', 'Категория «'.$item->title.'» успешно '.$action);
 
-        return redirect()->to(route('back.categories.edit', $item->fresh()->id));
+        return response()->redirectToRoute('back.categories.edit', $item->fresh()->id);
     }
 
     /**
@@ -143,11 +147,13 @@ class CategoriesController extends Controller
      * @param null $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id = null)
+    public function destroy($id = null): JsonResponse
     {
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
 
             //TODO добавить detach
+
+            event(new ModifyCategoryEvent($item, $item->parent));
 
             $item->delete();
 
@@ -167,7 +173,7 @@ class CategoriesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSlug(Request $request)
+    public function getSlug(Request $request): JsonResponse
     {
         $name = $request->get('name');
         $slug = SlugService::createSlug(CategoryModel::class, 'slug', $name);
@@ -181,7 +187,7 @@ class CategoriesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSuggestions(Request $request)
+    public function getSuggestions(Request $request): JsonResponse
     {
         $search = $request->get('q');
         $data = [];
@@ -191,11 +197,13 @@ class CategoriesController extends Controller
         return response()->json($data);
     }
 
-    public function move(Request $request)
+    public function move(Request $request): JsonResponse
     {
         $data = json_decode($request->get('data'), true);
 
         CategoryModel::defaultOrder()->rebuildTree($data);
+
+        event(new ModifyCategoryEvent());
 
         return response()->json([
             'success' => true,

@@ -11,7 +11,7 @@
     @if (count($item['items']) > 0)
         <ol class="dd-list">
             @foreach($item['items'] as $item)
-                @include('admin.module.categories::partials.tree.index_category', $item)
+                @include('admin.module.categories::back.partials.tree.index_category', $item)
             @endforeach
         </ol>
     @endif
