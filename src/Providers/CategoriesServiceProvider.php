@@ -63,7 +63,7 @@ class CategoriesServiceProvider extends ServiceProvider
         ], 'public');
 
         $this->publishes([
-            __DIR__.'/../../config/comments.php' => config_path('categories.php'),
+            __DIR__.'/../../config/categories.php' => config_path('categories.php'),
         ], 'config');
 
         $this->mergeConfigFrom(
