@@ -14,8 +14,8 @@ use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
-use InetStudio\SimpleCounters\Traits\HasSimpleCountersTrait;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
 /**
  * InetStudio\Categories\Models\CategoryModel.
