@@ -59,9 +59,9 @@
                         <div id="collapseMain" class="panel-collapse collapse in" aria-expanded="true">
                             <div class="panel-body">
 
-                                {!! Form::string('title', $item->title, [
+                                {!! Form::string('name', $item->name, [
                                     'label' => [
-                                        'title' => 'Заголовок',
+                                        'title' => 'Название',
                                     ],
                                     'field' => [
                                         'class' => 'form-control slugify',
@@ -78,6 +78,12 @@
                                         'class' => 'form-control slugify',
                                         'data-slug-url' => route('back.categories.getSlug'),
                                         'data-slug-target' => 'slug',
+                                    ],
+                                ]) !!}
+
+                                {!! Form::string('h1', $item->h1, [
+                                    'label' => [
+                                        'title' => 'H1',
                                     ],
                                 ]) !!}
 

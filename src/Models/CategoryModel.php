@@ -18,11 +18,12 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
 /**
- * InetStudio\Categories\Models\CategoryModel.
+ * InetStudio\Categories\Models\CategoryModel
  *
  * @property int $id
- * @property string $title
+ * @property string $name
  * @property string $slug
+ * @property string $h1
  * @property string|null $description
  * @property string|null $content
  * @property int $_lft
@@ -32,13 +33,14 @@ use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
  * @property \Carbon\Carbon|null $updated_at
  * @property \Carbon\Carbon|null $deleted_at
  * @property-read \Kalnoy\Nestedset\Collection|\InetStudio\Categories\Models\CategoryModel[] $children
+ * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\SimpleCounters\Models\SimpleCounterModel[] $counters
  * @property-read \Illuminate\Contracts\Routing\UrlGenerator|string $href
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
  * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
  * @property-read \InetStudio\Categories\Models\CategoryModel|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel d()
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel findSimilarSlugs(\Illuminate\Database\Eloquent\Model $model, $attribute, $config, $slug)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel findSimilarSlugs($attribute, $config, $slug)
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel onlyTrashed()
  * @method static bool|null restore()
@@ -46,12 +48,13 @@ use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereH1($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereLft($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereRgt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withoutTrashed()
@@ -86,7 +89,7 @@ class CategoryModel extends Model implements HasMediaConversions
      * @var array
      */
     protected $fillable = [
-        'title', 'slug', 'description', 'content',
+        'name', 'slug', 'h1', 'description', 'content',
     ];
 
     /**
@@ -109,7 +112,7 @@ class CategoryModel extends Model implements HasMediaConversions
      */
     public function toSearchableArray()
     {
-        $arr = array_only($this->toArray(), ['id', 'title', 'description', 'content']);
+        $arr = array_only($this->toArray(), ['id', 'name', 'h1', 'description', 'content']);
 
         return $arr;
     }
@@ -123,7 +126,7 @@ class CategoryModel extends Model implements HasMediaConversions
     {
         return [
             'slug' => [
-                'source' => 'title',
+                'source' => 'name',
                 'unique' => true,
             ],
         ];
@@ -181,7 +184,7 @@ class CategoryModel extends Model implements HasMediaConversions
         $traverse = function ($categories) use (&$traverse, $data) {
             foreach ($categories as $category) {
                 $data[$category->id]['id'] = $category->id;
-                $data[$category->id]['name'] = $category->title;
+                $data[$category->id]['name'] = $category->name;
                 $data[$category->id]['href'] = $category->href;
                 $data[$category->id]['items'] = $traverse($category->children);
             }

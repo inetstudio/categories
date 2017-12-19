@@ -8,7 +8,7 @@ PUT app_index/_mapping/categories
     "id": {
       "type": "integer"
   	},
-    "title": {
+    "name": {
   	  "type": "string"
     },
 	  "description": {

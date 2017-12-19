@@ -115,8 +115,9 @@ class CategoriesController extends Controller
 
         $oldParent = $item->parent;
 
-        $item->title = strip_tags($request->get('title'));
+        $item->name = strip_tags($request->get('name'));
         $item->slug = strip_tags($request->get('slug'));
+        $item->h1 = strip_tags($request->get('h1'));
         $item->description = strip_tags($request->input('description.text'));
         $item->content = $request->input('content.text');
         $item->save();
@@ -136,7 +137,7 @@ class CategoriesController extends Controller
 
         event(new ModifyCategoryEvent($item, $oldParent, $newParent));
 
-        Session::flash('success', 'Категория «'.$item->title.'» успешно '.$action);
+        Session::flash('success', 'Категория «'.$item->name.'» успешно '.$action);
 
         return response()->redirectToRoute('back.categories.edit', $item->fresh()->id);
     }
@@ -192,7 +193,7 @@ class CategoriesController extends Controller
         $search = $request->get('q');
         $data = [];
 
-        $data['items'] = CategoryModel::select(['id', 'title as name'])->where('title', 'LIKE', '%'.$search.'%')->get()->toArray();
+        $data['items'] = CategoryModel::select(['id', 'name'])->where('name', 'LIKE', '%'.$search.'%')->get()->toArray();
 
         return response()->json($data);
     }

@@ -35,8 +35,8 @@ class SaveCategoryRequest extends FormRequest
             'og_image.crop.default.crop_size' => 'Минимальный размер области — 968x475 пикселей',
             'og_image.crop.default.json' => 'Область отображения должна быть представлена в виде JSON',
 
-            'title.required' => 'Поле «Заголовок» обязательно для заполнения',
-            'title.max' => 'Поле «Заголовок» не должно превышать 255 символов',
+            'name.required' => 'Поле «Заголовок» обязательно для заполнения',
+            'name.max' => 'Поле «Заголовок» не должно превышать 255 символов',
 
             'slug.required' => 'Поле «URL» обязательно для заполнения',
             'slug.alpha_dash' => 'Поле «URL» может содержать только латинские символы, цифры, дефисы и подчеркивания',
@@ -62,7 +62,7 @@ class SaveCategoryRequest extends FormRequest
 
             'og_image.crop.default' => 'nullable|json|crop_size:968,475,min',
 
-            'title' => 'required|max:255',
+            'name' => 'required|max:255',
             'slug' => 'required|alpha_dash|max:255|unique:categories,slug,'.$request->get('category_id'),
         ];
     }
