@@ -81,9 +81,9 @@
                                     ],
                                 ]) !!}
 
-                                {!! Form::string('h1', $item->h1, [
+                                {!! Form::string('title', $item->title, [
                                     'label' => [
-                                        'title' => 'H1',
+                                        'title' => 'Заголовок',
                                     ],
                                 ]) !!}
 

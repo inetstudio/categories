@@ -19,7 +19,7 @@ class CategoriesService
         $cacheKey = 'CategoriesService_getCategoryBySlug_'.md5($slug);
 
         $categories = Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($slug) {
-            return CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'description'])
+            return CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
                 ->with(['meta' => function ($query) {
                     $query->select(['metable_id', 'metable_type', 'key', 'value']);
                 }, 'media' => function ($query) {
@@ -64,7 +64,7 @@ class CategoriesService
         $cacheKey = 'CategoriesService_getSubCategories_'.$parentCategory->id;
 
         return Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($parentCategory) {
-            return CategoryModel::select(['id', 'name', 'slug'])
+            return CategoryModel::select(['id', 'name', 'slug', 'title'])
                 ->defaultOrder()
                 ->withDepth()
                 ->having('depth', '=', 1)

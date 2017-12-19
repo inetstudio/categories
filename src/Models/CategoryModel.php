@@ -23,7 +23,7 @@ use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
  * @property int $id
  * @property string $name
  * @property string $slug
- * @property string $h1
+ * @property string $title
  * @property string|null $description
  * @property string|null $content
  * @property int $_lft
@@ -48,13 +48,13 @@ use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereH1($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereLft($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereParentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereRgt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withoutTrashed()
@@ -89,7 +89,7 @@ class CategoryModel extends Model implements HasMediaConversions
      * @var array
      */
     protected $fillable = [
-        'name', 'slug', 'h1', 'description', 'content',
+        'name', 'slug', 'title', 'description', 'content',
     ];
 
     /**
@@ -112,7 +112,7 @@ class CategoryModel extends Model implements HasMediaConversions
      */
     public function toSearchableArray()
     {
-        $arr = array_only($this->toArray(), ['id', 'name', 'h1', 'description', 'content']);
+        $arr = array_only($this->toArray(), ['id', 'name', 'title', 'description', 'content']);
 
         return $arr;
     }

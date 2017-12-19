@@ -12,7 +12,7 @@ class CreateCategoriesTables extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug');
-            $table->string('h1');
+            $table->string('title');
             $table->text('description')->nullable();
             $table->text('content')->nullable();
             NestedSet::columns($table);

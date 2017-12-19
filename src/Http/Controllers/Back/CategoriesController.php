@@ -117,7 +117,7 @@ class CategoriesController extends Controller
 
         $item->name = strip_tags($request->get('name'));
         $item->slug = strip_tags($request->get('slug'));
-        $item->h1 = strip_tags($request->get('h1'));
+        $item->title = strip_tags($request->get('title'));
         $item->description = strip_tags($request->input('description.text'));
         $item->content = $request->input('content.text');
         $item->save();
