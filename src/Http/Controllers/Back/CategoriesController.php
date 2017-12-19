@@ -12,7 +12,7 @@ use InetStudio\Categories\Models\CategoryModel;
 use InetStudio\Categories\Events\ModifyCategoryEvent;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\MetaManipulationsTrait;
+use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 
 /**
