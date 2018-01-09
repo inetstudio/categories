@@ -177,7 +177,7 @@ class CategoriesController extends Controller
     public function getSlug(Request $request): JsonResponse
     {
         $name = $request->get('name');
-        $slug = SlugService::createSlug(CategoryModel::class, 'slug', $name);
+        $slug = ($name) ? SlugService::createSlug(CategoryModel::class, 'slug', $name) : '';
 
         return response()->json($slug);
     }
