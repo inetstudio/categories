@@ -2,16 +2,25 @@
 
 namespace InetStudio\Categories\Services\Front;
 
+use League\Fractal\Manager;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection;
 use InetStudio\Categories\Models\CategoryModel;
+use League\Fractal\Serializer\DataArraySerializer;
+use InetStudio\Categories\Contracts\Services\CategoriesServiceContract;
+use InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer;
 
-class CategoriesService
+/**
+ * Class CategoriesService
+ * @package InetStudio\Categories\Services\Front
+ */
+class CategoriesService implements CategoriesServiceContract
 {
     /**
      * Получаем категорию по slug.
      *
      * @param string $slug
+     *
      * @return CategoryModel
      */
     public function getCategoryBySlug(string $slug): CategoryModel
@@ -40,6 +49,7 @@ class CategoriesService
      * Родительская категория.
      *
      * @param CategoryModel $category
+     *
      * @return CategoryModel
      */
     public function getParentCategory(CategoryModel $category): CategoryModel
@@ -57,6 +67,7 @@ class CategoriesService
      * Подкатегории.
      *
      * @param CategoryModel $parentCategory
+     *
      * @return Collection
      */
     public function getSubCategories(CategoryModel $parentCategory): Collection
@@ -70,5 +81,38 @@ class CategoriesService
                 ->having('depth', '=', 1)
                 ->descendantsOf($parentCategory->id);
         });
+    }
+
+    /**
+     * Получаем информацию по категориям для карты сайта.
+     *
+     * @return array
+     */
+    public function getSiteMapItems(): array
+    {
+        $categories = CategoryModel::select(['slug', 'created_at', 'updated_at'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $resource = (new CategoriesSiteMapTransformer())->transformCollection($categories);
+
+        return $this->serializeToArray($resource);
+    }
+
+    /**
+     * Преобразовываем данные в массив.
+     *
+     * @param $resource
+     *
+     * @return array
+     */
+    private function serializeToArray($resource): array
+    {
+        $manager = new Manager();
+        $manager->setSerializer(new DataArraySerializer());
+
+        $transformation = $manager->createData($resource)->toArray();
+
+        return $transformation['data'];
     }
 }

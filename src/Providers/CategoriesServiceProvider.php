@@ -9,7 +9,12 @@ use InetStudio\Categories\Console\Commands\SetupCommand;
 use InetStudio\Categories\Services\Front\CategoriesService;
 use InetStudio\Categories\Listeners\ClearCategoryCacheListener;
 use InetStudio\Categories\Console\Commands\CreateFoldersCommand;
+use InetStudio\Categories\Contracts\Services\CategoriesServiceContract;
 
+/**
+ * Class CategoriesServiceProvider
+ * @package InetStudio\Categories\Providers
+ */
 class CategoriesServiceProvider extends ServiceProvider
 {
     /**
@@ -117,6 +122,6 @@ class CategoriesServiceProvider extends ServiceProvider
      */
     public function registerBindings(): void
     {
-        $this->app->bind('CategoriesService', CategoriesService::class);
+        $this->app->bind(CategoriesServiceContract::class, CategoriesService::class);
     }
 }
