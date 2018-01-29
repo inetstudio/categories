@@ -4,6 +4,10 @@ namespace InetStudio\Categories\Console\Commands;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class SetupCommand
+ * @package InetStudio\Categories\Console\Commands
+ */
 class SetupCommand extends Command
 {
     /**

@@ -4,6 +4,10 @@ namespace InetStudio\Categories\Listeners;
 
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class ClearCategoryCacheListener
+ * @package InetStudio\Categories\Listeners
+ */
 class ClearCategoryCacheListener
 {
     /**
@@ -26,18 +30,18 @@ class ClearCategoryCacheListener
         $newParent = $event->newParent;
 
         if ($object) {
-            Cache::tags(['categories'])->forget('CategoriesService_getParentCategory_'.$object->id);
+            Cache::tags(['categories'])->forget('CategoriesService_getParentCategory_'.md5($object->id));
             Cache::tags(['categories'])->forget('CategoriesService_getCategoryBySlug_'.md5($object->slug));
         } else {
             Cache::tags(['categories'])->flush();
         }
 
         if ($oldParent) {
-            Cache::tags(['categories'])->forget('CategoriesService_getSubCategories_'.$oldParent->id);
+            Cache::tags(['categories'])->forget('CategoriesService_getSubCategories_'.md5($oldParent->id));
         }
 
-        if ($newParent && $newParent->id != $oldParent->id) {
-            Cache::tags(['categories'])->forget('CategoriesService_getSubCategories_'.$newParent->id);
+        if ($newParent) {
+            Cache::tags(['categories'])->forget('CategoriesService_getSubCategories_'.md5($newParent->id));
         }
 
         Cache::tags(['materials'])->flush();

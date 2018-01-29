@@ -5,6 +5,10 @@ namespace InetStudio\Categories\Providers;
 use Collective\Html\FormBuilder;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class FormBuilderServiceProvider
+ * @package InetStudio\Categories\Providers
+ */
 class FormBuilderServiceProvider extends ServiceProvider
 {
     /**

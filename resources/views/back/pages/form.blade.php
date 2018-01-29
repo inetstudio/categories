@@ -14,10 +14,7 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.categories::back.partials.breadcrumbs')
-        <li>
-            <a href="{{ route('back.categories.index') }}">Категории</a>
-        </li>
+        @include('admin.module.categories::back.partials.breadcrumbs.form')
     @endpush
 
     <div class="row m-sm">

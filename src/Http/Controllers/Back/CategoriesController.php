@@ -3,22 +3,19 @@
 namespace InetStudio\Categories\Http\Controllers\Back;
 
 use Illuminate\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Categories\Models\CategoryModel;
 use InetStudio\Categories\Events\ModifyCategoryEvent;
-use Cviebrock\EloquentSluggable\Services\SlugService;
 use InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest;
 use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 
 /**
- * Контроллер для управления категориями.
- *
- * Class ContestByTagStatusesController
+ * Class CategoriesController
+ * @package InetStudio\Categories\Http\Controllers\Back
  */
 class CategoriesController extends Controller
 {
@@ -58,6 +55,7 @@ class CategoriesController extends Controller
      * Создание категории.
      *
      * @param SaveCategoryRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(SaveCategoryRequest $request): RedirectResponse
@@ -69,6 +67,7 @@ class CategoriesController extends Controller
      * Редактирование категории.
      *
      * @param null $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id = null): View
@@ -90,6 +89,7 @@ class CategoriesController extends Controller
      *
      * @param SaveCategoryRequest $request
      * @param null $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(SaveCategoryRequest $request, $id = null): RedirectResponse
@@ -102,6 +102,7 @@ class CategoriesController extends Controller
      *
      * @param SaveCategoryRequest $request
      * @param null $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     private function save(SaveCategoryRequest $request, $id = null): RedirectResponse
@@ -146,6 +147,7 @@ class CategoriesController extends Controller
      * Удаление категории.
      *
      * @param null $id
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id = null): JsonResponse
@@ -166,48 +168,5 @@ class CategoriesController extends Controller
                 'success' => false,
             ]);
         }
-    }
-
-    /**
-     * Получаем slug для модели по строке.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSlug(Request $request): JsonResponse
-    {
-        $name = $request->get('name');
-        $slug = ($name) ? SlugService::createSlug(CategoryModel::class, 'slug', $name) : '';
-
-        return response()->json($slug);
-    }
-
-    /**
-     * Возвращаем категории для поля.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSuggestions(Request $request): JsonResponse
-    {
-        $search = $request->get('q');
-        $data = [];
-
-        $data['items'] = CategoryModel::select(['id', 'name'])->where('name', 'LIKE', '%'.$search.'%')->get()->toArray();
-
-        return response()->json($data);
-    }
-
-    public function move(Request $request): JsonResponse
-    {
-        $data = json_decode($request->get('data'), true);
-
-        CategoryModel::defaultOrder()->rebuildTree($data);
-
-        event(new ModifyCategoryEvent());
-
-        return response()->json([
-            'success' => true,
-        ]);
     }
 }

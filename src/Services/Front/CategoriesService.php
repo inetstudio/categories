@@ -54,7 +54,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getParentCategory(CategoryModel $category): CategoryModel
     {
-        $cacheKey = 'CategoriesService_getParentCategory_'.$category->id;
+        $cacheKey = 'CategoriesService_getParentCategory_'.md5($category->id);
 
         return Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($category) {
             $parentCategory = $category->parent;
@@ -72,7 +72,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSubCategories(CategoryModel $parentCategory): Collection
     {
-        $cacheKey = 'CategoriesService_getSubCategories_'.$parentCategory->id;
+        $cacheKey = 'CategoriesService_getSubCategories_'.md5($parentCategory->id);
 
         return Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($parentCategory) {
             return CategoryModel::select(['id', 'name', 'slug', 'title'])

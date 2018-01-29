@@ -5,6 +5,10 @@ namespace InetStudio\Categories\Http\Requests\Back;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class SaveCategoryRequest
+ * @package InetStudio\Categories\Http\Requests\Back
+ */
 class SaveCategoryRequest extends FormRequest
 {
     /**

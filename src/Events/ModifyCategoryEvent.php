@@ -4,6 +4,10 @@ namespace InetStudio\Categories\Events;
 
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class ModifyCategoryEvent
+ * @package InetStudio\Categories\Events
+ */
 class ModifyCategoryEvent
 {
     use SerializesModels;

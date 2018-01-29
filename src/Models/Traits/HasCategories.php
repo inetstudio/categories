@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Collection;
 use InetStudio\Categories\Models\CategoryModel;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
+/**
+ * Trait HasCategories
+ * @package InetStudio\Categories\Models\Traits
+ */
 trait HasCategories
 {
     /**
