@@ -6,6 +6,11 @@
 
 @section('title', $title)
 
+@pushonce('styles:nestable')
+    <!-- CUSTOM STYLE -->
+    <link href="{!! asset('admin/css/plugins/nestable/jquery.nestable.min.css') !!}" rel="stylesheet">
+@endpushonce
+
 @pushonce('styles:categories_custom')
     <!-- CUSTOM STYLE -->
     <link href="{!! asset('admin/css/modules/categories/custom.css') !!}" rel="stylesheet">
@@ -47,5 +52,5 @@
 
 @pushonce('scripts:nestable')
     <!-- Nestable List -->
-    <script src="{!! asset('admin/js/plugins/nestable/jquery.nestable.js') !!}"></script>
+    <script src="{!! asset('admin/js/plugins/nestable/jquery.nestable.min.js') !!}"></script>
 @endpushonce

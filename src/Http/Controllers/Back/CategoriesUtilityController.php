@@ -40,9 +40,36 @@ class CategoriesUtilityController extends Controller
     public function getSuggestions(Request $request): JsonResponse
     {
         $search = $request->get('q');
-        $data = [];
 
-        $data['items'] = CategoryModel::select(['id', 'name'])->where('name', 'LIKE', '%'.$search.'%')->get()->toArray();
+        $items = CategoryModel::select(['id', 'name', 'slug'])->where('name', 'LIKE', '%'.$search.'%')->get();
+
+        if ($request->filled('type') and $request->get('type') == 'autocomplete') {
+            $type = get_class(new CategoryModel());
+
+            $data = $items->mapToGroups(function ($item) use ($type) {
+                return [
+                    'suggestions' => [
+                        'value' => $item->name,
+                        'data' => [
+                            'id' => $item->id,
+                            'type' => $type,
+                            'title' => $item->name,
+                            'path' => parse_url($item->href, PHP_URL_PATH),
+                            'href' => $item->href,
+                        ],
+                    ],
+                ];
+            });
+        } else {
+            $data = $items->mapToGroups(function ($item) {
+                return [
+                    'items' => [
+                        'id' => $item->id,
+                        'name' => $item->name,
+                    ],
+                ];
+            });
+        }
 
         return response()->json($data);
     }

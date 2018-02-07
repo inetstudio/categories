@@ -1,3 +1,17 @@
+.dd-item:not(.dd-collapsed) > button.dd-expand,.suggestions, .menu-item-data, .dd-empty {
+    display: none;
+}
+.dd3-empty {
+    text-align:center;
+    border: 1px dashed #bbb;
+}
+
+.dd3-empty i {
+    vertical-align: middle;
+    line-height: 100px;
+    font-size: 25px;
+}
+
 .dd3-content {
     display: block;
     margin: 10px 0;
@@ -19,6 +33,7 @@
 
 .dd3-item > button {
     margin-left: 30px;
+    font-size: 16px;
 }
 
 .dd3-handle {
@@ -30,8 +45,7 @@
     text-indent: 100%;
     white-space: nowrap;
     overflow: hidden;
-    background: #1ab394;
-    border-width: 0px;
+    background: white;
     cursor: move;
 }
 
@@ -44,7 +58,7 @@
     width: 100%;
     text-align: center;
     text-indent: 0;
-    color: #fff;
+    color: #1ab394;
     font-size: 20px;
     font-weight: normal;
     cursor: move;
