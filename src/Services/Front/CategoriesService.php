@@ -27,7 +27,7 @@ class CategoriesService implements CategoriesServiceContract
     {
         $cacheKey = 'CategoriesService_getCategoryBySlug_'.md5($slug);
 
-        $categories = Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($slug) {
+        $categories = Cache::remember($cacheKey, 1440, function () use ($slug) {
             return CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
                 ->with(['meta' => function ($query) {
                     $query->select(['metable_id', 'metable_type', 'key', 'value']);
@@ -56,7 +56,7 @@ class CategoriesService implements CategoriesServiceContract
     {
         $cacheKey = 'CategoriesService_getParentCategory_'.md5($category->id);
 
-        return Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($category) {
+        return Cache::remember($cacheKey, 1440, function () use ($category) {
             $parentCategory = $category->parent;
 
             return ($parentCategory) ? $parentCategory : $category;
@@ -74,7 +74,7 @@ class CategoriesService implements CategoriesServiceContract
     {
         $cacheKey = 'CategoriesService_getSubCategories_'.md5($parentCategory->id);
 
-        return Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($parentCategory) {
+        return Cache::remember($cacheKey, 1440, function () use ($parentCategory) {
             return CategoryModel::select(['id', 'name', 'slug', 'title'])
                 ->defaultOrder()
                 ->withDepth()
