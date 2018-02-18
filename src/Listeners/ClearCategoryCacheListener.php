@@ -30,20 +30,25 @@ class ClearCategoryCacheListener
         $newParent = $event->newParent;
 
         if ($object) {
+            //Cache::tags(['categories'])->forget('CategoriesService_getParentCategory_'.md5($object->id));
+            //Cache::tags(['categories'])->forget('CategoriesService_getCategoryBySlug_'.md5($object->slug));
             Cache::forget('CategoriesService_getParentCategory_'.md5($object->id));
             Cache::forget('CategoriesService_getCategoryBySlug_'.md5($object->slug));
         } else {
+            //Cache::tags(['categories'])->flush();
             Cache::flush();
         }
 
         if ($oldParent) {
+            //Cache::tags(['categories'])->forget('CategoriesService_getSubCategories_'.md5($oldParent->id));
             Cache::forget('CategoriesService_getSubCategories_'.md5($oldParent->id));
         }
 
         if ($newParent) {
+            //Cache::tags(['categories'])->forget('CategoriesService_getSubCategories_'.md5($newParent->id));
             Cache::forget('CategoriesService_getSubCategories_'.md5($newParent->id));
         }
 
-        Cache::tags(['materials'])->flush();
+        //Cache::tags(['materials'])->flush();
     }
 }

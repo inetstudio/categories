@@ -27,6 +27,7 @@ class CategoriesService implements CategoriesServiceContract
     {
         $cacheKey = 'CategoriesService_getCategoryBySlug_'.md5($slug);
 
+        //$categories = Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($slug) {
         $categories = Cache::remember($cacheKey, 1440, function () use ($slug) {
             return CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
                 ->with(['meta' => function ($query) {
