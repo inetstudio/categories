@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Categories\Models\CategoryModel;
-use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
 use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
@@ -136,7 +135,11 @@ class CategoriesController extends Controller implements CategoriesControllerCon
         $this->saveMeta($item, $request);
         $this->saveImages($item, $request, ['og_image', 'content'], 'categories');
 
-        event(app()->makeWith(ModifyCategoryEventContract::class, compact($item, $oldParent, $newParent)));
+        event(app()->makeWith('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', [
+            'object' => $item,
+            'oldParent' => $oldParent,
+            'newParent' => $newParent,
+        ]));
 
         Session::flash('success', 'Категория «'.$item->name.'» успешно '.$action);
 
@@ -155,7 +158,10 @@ class CategoriesController extends Controller implements CategoriesControllerCon
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
             $oldParent = $item->parent;
 
-            event(app()->makeWith(ModifyCategoryEventContract::class, compact($item, $oldParent)));
+            event(app()->makeWith('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', [
+                'object' => $item,
+                'oldParent' => $oldParent,
+            ]));
 
             $item->delete();
 

@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use InetStudio\Categories\Models\CategoryModel;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
 use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract;
 
 /**
@@ -87,7 +86,7 @@ class CategoriesUtilityController extends Controller implements CategoriesUtilit
 
         CategoryModel::defaultOrder()->rebuildTree($data);
 
-        event(app()->makeWith(ModifyCategoryEventContract::class, []));
+        event(app()->makeWith('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', []));
 
         return response()->json([
             'success' => true,

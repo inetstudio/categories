@@ -8,8 +8,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract;
 
 /**
- * Class CategoriesSiteMapTransformer
- * @package InetStudio\Categories\Transformers\Front
+ * Class CategoriesSiteMapTransformer.
  */
 class CategoriesSiteMapTransformer extends TransformerAbstract implements CategoriesSiteMapTransformerContract
 {

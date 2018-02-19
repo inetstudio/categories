@@ -6,7 +6,6 @@ use League\Fractal\Manager;
 use InetStudio\Categories\Models\CategoryModel;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
-use InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract;
 
 /**
  * Class CategoriesService.
@@ -103,7 +102,8 @@ class CategoriesService implements CategoriesServiceContract
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $resource = (app()->make(CategoriesSiteMapTransformerContract::class))->transformCollection($categories);
+        $resource = app()->make('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract')
+            ->transformCollection($categories);
 
         $manager = new Manager();
         $manager->setSerializer(new DataArraySerializer());

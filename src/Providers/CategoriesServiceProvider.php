@@ -3,20 +3,6 @@
 namespace InetStudio\Categories\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use InetStudio\Categories\Events\ModifyCategoryEvent;
-use InetStudio\Categories\Console\Commands\SetupCommand;
-use InetStudio\Categories\Services\Front\CategoriesService;
-use InetStudio\Categories\Console\Commands\CreateFoldersCommand;
-use InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest;
-use InetStudio\Categories\Http\Controllers\Back\CategoriesController;
-use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
-use InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer;
-use InetStudio\Categories\Http\Controllers\Back\CategoriesUtilityController;
-use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
-use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
-use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract;
-use InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract;
-use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract;
 
 /**
  * Class CategoriesServiceProvider.
@@ -55,8 +41,8 @@ class CategoriesServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                SetupCommand::class,
-                CreateFoldersCommand::class,
+                'InetStudio\Categories\Console\Commands\SetupCommand',
+                'InetStudio\Categories\Console\Commands\CreateFoldersCommand',
             ]);
         }
     }
@@ -117,20 +103,20 @@ class CategoriesServiceProvider extends ServiceProvider
      */
     public function registerBindings(): void
     {
-        // Events
-        $this->app->bind(ModifyCategoryEventContract::class, ModifyCategoryEvent::class);
-
         // Controllers
-        $this->app->bind(CategoriesControllerContract::class, CategoriesController::class);
-        $this->app->bind(CategoriesUtilityControllerContract::class, CategoriesUtilityController::class);
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesController');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesUtilityController');
+        
+        // Events
+        $this->app->bind('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', 'InetStudio\Categories\Events\ModifyCategoryEvent');
 
         // Requests
-        $this->app->bind(SaveCategoryRequestContract::class, SaveCategoryRequest::class);
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract', 'InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest');
 
         // Services
-        $this->app->bind(CategoriesServiceContract::class, CategoriesService::class);
+        $this->app->bind('InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract', 'InetStudio\Categories\Services\Front\CategoriesService');
 
         // Transformers
-        $this->app->bind(CategoriesSiteMapTransformerContract::class, CategoriesSiteMapTransformer::class);
+        $this->app->bind('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract', 'InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer');
     }
 }

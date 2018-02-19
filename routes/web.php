@@ -1,17 +1,15 @@
 <?php
 
-use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract;
-use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract;
-
 Route::group([
+    'namespace' => 'InetStudio\Categories\Contracts\Http\Controllers\Back',
     'middleware' => ['web', 'back.auth'],
-    'prefix' => 'back'
+    'prefix' => 'back',
 ], function () {
-    Route::post('categories/move', CategoriesUtilityControllerContract::class.'@move')->name('back.categories.move');
-    Route::post('categories/slug', CategoriesUtilityControllerContract::class.'@getSlug')->name('back.categories.getSlug');
-    Route::post('categories/suggestions', CategoriesUtilityControllerContract::class.'@getSuggestions')->name('back.categories.getSuggestions');
+    Route::post('categories/move', 'CategoriesUtilityControllerContract@move')->name('back.categories.move');
+    Route::post('categories/slug', 'CategoriesUtilityControllerContract@getSlug')->name('back.categories.getSlug');
+    Route::post('categories/suggestions', 'CategoriesUtilityControllerContract@getSuggestions')->name('back.categories.getSuggestions');
 
-    Route::resource('categories', CategoriesControllerContract::class, ['except' => [
+    Route::resource('categories', 'CategoriesControllerContract', ['except' => [
         'show',
     ], 'as' => 'back']);
 });
