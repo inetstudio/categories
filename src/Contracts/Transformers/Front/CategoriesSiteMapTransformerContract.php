@@ -7,5 +7,4 @@ namespace InetStudio\Categories\Contracts\Transformers\Front;
  */
 interface CategoriesSiteMapTransformerContract
 {
-
 }

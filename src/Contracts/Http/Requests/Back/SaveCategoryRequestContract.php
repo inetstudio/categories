@@ -7,5 +7,4 @@ namespace InetStudio\Categories\Contracts\Http\Requests\Back;
  */
 interface SaveCategoryRequestContract
 {
-
 }

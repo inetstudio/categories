@@ -7,5 +7,4 @@ namespace InetStudio\Categories\Contracts\Events;
  */
 interface ModifyCategoryEventContract
 {
-
 }
