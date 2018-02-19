@@ -106,7 +106,7 @@ class CategoriesServiceProvider extends ServiceProvider
         // Controllers
         $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesController');
         $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesUtilityController');
-        
+
         // Events
         $this->app->bind('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', 'InetStudio\Categories\Events\ModifyCategoryEvent');
 

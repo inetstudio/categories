@@ -7,5 +7,4 @@ namespace InetStudio\Categories\Contracts\Services\Front;
  */
 interface CategoriesServiceContract
 {
-
 }

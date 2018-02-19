@@ -6,8 +6,7 @@ use Collective\Html\FormBuilder;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class FormBuilderServiceProvider
- * @package InetStudio\Categories\Providers
+ * Class FormBuilderServiceProvider.
  */
 class FormBuilderServiceProvider extends ServiceProvider
 {

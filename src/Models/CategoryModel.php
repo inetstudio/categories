@@ -20,7 +20,7 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
 /**
- * InetStudio\Categories\Models\CategoryModel
+ * InetStudio\Categories\Models\CategoryModel.
  *
  * @property int $id
  * @property string $name
