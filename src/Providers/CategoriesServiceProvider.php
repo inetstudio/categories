@@ -2,18 +2,24 @@
 
 namespace InetStudio\Categories\Providers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use InetStudio\Categories\Events\ModifyCategoryEvent;
 use InetStudio\Categories\Console\Commands\SetupCommand;
 use InetStudio\Categories\Services\Front\CategoriesService;
-use InetStudio\Categories\Listeners\ClearCategoryCacheListener;
 use InetStudio\Categories\Console\Commands\CreateFoldersCommand;
-use InetStudio\Categories\Contracts\Services\CategoriesServiceContract;
+use InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest;
+use InetStudio\Categories\Http\Controllers\Back\CategoriesController;
+use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
+use InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer;
+use InetStudio\Categories\Http\Controllers\Back\CategoriesUtilityController;
+use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
+use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
+use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract;
+use InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract;
+use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract;
 
 /**
- * Class CategoriesServiceProvider
- * @package InetStudio\Categories\Providers
+ * Class CategoriesServiceProvider.
  */
 class CategoriesServiceProvider extends ServiceProvider
 {
@@ -28,7 +34,6 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
-        $this->registerEvents();
     }
 
     /**
@@ -106,22 +111,26 @@ class CategoriesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Регистрация событий.
-     *
-     * @return void
-     */
-    protected function registerEvents(): void
-    {
-        Event::listen(ModifyCategoryEvent::class, ClearCategoryCacheListener::class);
-    }
-
-    /**
      * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
      *
      * @return void
      */
     public function registerBindings(): void
     {
+        // Events
+        $this->app->bind(ModifyCategoryEventContract::class, ModifyCategoryEvent::class);
+
+        // Controllers
+        $this->app->bind(CategoriesControllerContract::class, CategoriesController::class);
+        $this->app->bind(CategoriesUtilityControllerContract::class, CategoriesUtilityController::class);
+
+        // Requests
+        $this->app->bind(SaveCategoryRequestContract::class, SaveCategoryRequest::class);
+
+        // Services
         $this->app->bind(CategoriesServiceContract::class, CategoriesService::class);
+
+        // Transformers
+        $this->app->bind(CategoriesSiteMapTransformerContract::class, CategoriesSiteMapTransformer::class);
     }
 }

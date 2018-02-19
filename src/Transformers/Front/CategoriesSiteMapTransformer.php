@@ -5,12 +5,13 @@ namespace InetStudio\Categories\Transformers\Front;
 use League\Fractal\TransformerAbstract;
 use InetStudio\Categories\Models\CategoryModel;
 use League\Fractal\Resource\Collection as FractalCollection;
+use InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract;
 
 /**
  * Class CategoriesSiteMapTransformer
  * @package InetStudio\Categories\Transformers\Front
  */
-class CategoriesSiteMapTransformer extends TransformerAbstract
+class CategoriesSiteMapTransformer extends TransformerAbstract implements CategoriesSiteMapTransformerContract
 {
     /**
      * Подготовка данных для отображения в карте сайта.

@@ -3,12 +3,12 @@
 namespace InetStudio\Categories\Events;
 
 use Illuminate\Queue\SerializesModels;
+use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
 
 /**
- * Class ModifyCategoryEvent
- * @package InetStudio\Categories\Events
+ * Class ModifyCategoryEvent.
  */
-class ModifyCategoryEvent
+class ModifyCategoryEvent implements ModifyCategoryEventContract
 {
     use SerializesModels;
 

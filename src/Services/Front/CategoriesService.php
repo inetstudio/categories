@@ -3,16 +3,13 @@
 namespace InetStudio\Categories\Services\Front;
 
 use League\Fractal\Manager;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Database\Eloquent\Collection;
 use InetStudio\Categories\Models\CategoryModel;
 use League\Fractal\Serializer\DataArraySerializer;
-use InetStudio\Categories\Contracts\Services\CategoriesServiceContract;
-use InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer;
+use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
+use InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract;
 
 /**
- * Class CategoriesService
- * @package InetStudio\Categories\Services\Front
+ * Class CategoriesService.
  */
 class CategoriesService implements CategoriesServiceContract
 {
@@ -20,68 +17,79 @@ class CategoriesService implements CategoriesServiceContract
      * Получаем категорию по slug.
      *
      * @param string $slug
+     * @param bool $returnBuilder
      *
-     * @return CategoryModel
+     * @return mixed
      */
-    public function getCategoryBySlug(string $slug): CategoryModel
+    public static function getCategoryBySlug(string $slug, bool $returnBuilder = false)
     {
-        $cacheKey = 'CategoriesService_getCategoryBySlug_'.md5($slug);
+        $builder = CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
+            ->with(['meta' => function ($query) {
+                $query->select(['metable_id', 'metable_type', 'key', 'value']);
+            }, 'media' => function ($query) {
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+            }])
+            ->whereSlug($slug);
 
-        //$categories = Cache::tags(['categories'])->remember($cacheKey, 1440, function () use ($slug) {
-        $categories = Cache::remember($cacheKey, 1440, function () use ($slug) {
-            return CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
-                ->with(['meta' => function ($query) {
-                    $query->select(['metable_id', 'metable_type', 'key', 'value']);
-                }, 'media' => function ($query) {
-                    $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-                }])
-                ->whereSlug($slug)
-                ->get();
-        });
+        if ($returnBuilder) {
+            return $builder;
+        }
 
-        if ($categories->count() == 0) {
+        $category = $builder->first();
+
+        if (! $category) {
             abort(404);
         }
 
-        return $categories->first();
+        return $category;
     }
 
     /**
      * Родительская категория.
      *
      * @param CategoryModel $category
+     * @param bool $returnBuilder
      *
      * @return CategoryModel
      */
-    public function getParentCategory(CategoryModel $category): CategoryModel
+    public static function getParentCategory(CategoryModel $category, bool $returnBuilder = false)
     {
-        $cacheKey = 'CategoriesService_getParentCategory_'.md5($category->id);
+        if ($returnBuilder) {
+            $builder = CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
+                ->with(['meta' => function ($query) {
+                    $query->select(['metable_id', 'metable_type', 'key', 'value']);
+                }, 'media' => function ($query) {
+                    $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+                }])
+                ->where('id', $category->parent_id);
 
-        return Cache::remember($cacheKey, 1440, function () use ($category) {
-            $parentCategory = $category->parent;
+            return $builder;
+        }
 
-            return ($parentCategory) ? $parentCategory : $category;
-        });
+        return $category->parent;
     }
 
     /**
      * Подкатегории.
      *
      * @param CategoryModel $parentCategory
+     * @param bool $returnBuilder
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getSubCategories(CategoryModel $parentCategory): Collection
+    public static function getSubCategories(CategoryModel $parentCategory, bool $returnBuilder = false)
     {
-        $cacheKey = 'CategoriesService_getSubCategories_'.md5($parentCategory->id);
+        $builder = CategoryModel::select(['id', 'name', 'slug', 'title'])
+            ->defaultOrder()
+            ->withDepth()
+            ->having('depth', '=', 1)
+            ->descendantsOf($parentCategory->id);
 
-        return Cache::remember($cacheKey, 1440, function () use ($parentCategory) {
-            return CategoryModel::select(['id', 'name', 'slug', 'title'])
-                ->defaultOrder()
-                ->withDepth()
-                ->having('depth', '=', 1)
-                ->descendantsOf($parentCategory->id);
-        });
+        if ($returnBuilder) {
+            return $builder;
+        }
+
+        return $builder->get();
     }
 
     /**
@@ -89,26 +97,14 @@ class CategoriesService implements CategoriesServiceContract
      *
      * @return array
      */
-    public function getSiteMapItems(): array
+    public static function getSiteMapItems(): array
     {
         $categories = CategoryModel::select(['slug', 'created_at', 'updated_at'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $resource = (new CategoriesSiteMapTransformer())->transformCollection($categories);
+        $resource = (app()->make(CategoriesSiteMapTransformerContract::class))->transformCollection($categories);
 
-        return $this->serializeToArray($resource);
-    }
-
-    /**
-     * Преобразовываем данные в массив.
-     *
-     * @param $resource
-     *
-     * @return array
-     */
-    private function serializeToArray($resource): array
-    {
         $manager = new Manager();
         $manager->setSerializer(new DataArraySerializer());
 

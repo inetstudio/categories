@@ -6,8 +6,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
 /**
- * Class SetupCommand
- * @package InetStudio\Categories\Console\Commands
+ * Class SetupCommand.
  */
 class SetupCommand extends Command
 {

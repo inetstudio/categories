@@ -4,12 +4,12 @@ namespace InetStudio\Categories\Http\Requests\Back;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 
 /**
- * Class SaveCategoryRequest
- * @package InetStudio\Categories\Http\Requests\Back
+ * Class SaveCategoryRequest.
  */
-class SaveCategoryRequest extends FormRequest
+class SaveCategoryRequest extends FormRequest implements SaveCategoryRequestContract
 {
     /**
      * Определить, авторизован ли пользователь для этого запроса.

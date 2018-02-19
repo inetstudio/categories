@@ -7,13 +7,13 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use InetStudio\Categories\Models\CategoryModel;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use InetStudio\Categories\Events\ModifyCategoryEvent;
+use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
+use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract;
 
 /**
- * Class CategoriesUtilityController
- * @package InetStudio\Categories\Http\Controllers\Back
+ * Class CategoriesUtilityController.
  */
-class CategoriesUtilityController extends Controller
+class CategoriesUtilityController extends Controller implements CategoriesUtilityControllerContract
 {
     /**
      * Получаем slug для модели по строке.
@@ -87,7 +87,7 @@ class CategoriesUtilityController extends Controller
 
         CategoryModel::defaultOrder()->rebuildTree($data);
 
-        event(new ModifyCategoryEvent());
+        event(app()->makeWith(ModifyCategoryEventContract::class, []));
 
         return response()->json([
             'success' => true,

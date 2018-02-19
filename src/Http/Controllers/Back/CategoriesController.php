@@ -8,16 +8,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Categories\Models\CategoryModel;
-use InetStudio\Categories\Events\ModifyCategoryEvent;
-use InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest;
+use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
 use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
+use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
+use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract;
 
 /**
- * Class CategoriesController
- * @package InetStudio\Categories\Http\Controllers\Back
+ * Class CategoriesController.
  */
-class CategoriesController extends Controller
+class CategoriesController extends Controller implements CategoriesControllerContract
 {
     use MetaManipulationsTrait;
     use ImagesManipulationsTrait;
@@ -54,11 +54,11 @@ class CategoriesController extends Controller
     /**
      * Создание категории.
      *
-     * @param SaveCategoryRequest $request
+     * @param SaveCategoryRequestContract $request
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveCategoryRequest $request): RedirectResponse
+    public function store(SaveCategoryRequestContract $request): RedirectResponse
     {
         return $this->save($request);
     }
@@ -87,12 +87,12 @@ class CategoriesController extends Controller
     /**
      * Обновление категории.
      *
-     * @param SaveCategoryRequest $request
+     * @param SaveCategoryRequestContract $request
      * @param null $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveCategoryRequest $request, $id = null): RedirectResponse
+    public function update(SaveCategoryRequestContract $request, $id = null): RedirectResponse
     {
         return $this->save($request, $id);
     }
@@ -100,12 +100,12 @@ class CategoriesController extends Controller
     /**
      * Сохранение категории.
      *
-     * @param SaveCategoryRequest $request
+     * @param SaveCategoryRequestContract $request
      * @param null $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function save(SaveCategoryRequest $request, $id = null): RedirectResponse
+    private function save(SaveCategoryRequestContract $request, $id = null): RedirectResponse
     {
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
             $action = 'отредактирована';
@@ -136,7 +136,7 @@ class CategoriesController extends Controller
         $this->saveMeta($item, $request);
         $this->saveImages($item, $request, ['og_image', 'content'], 'categories');
 
-        event(new ModifyCategoryEvent($item, $oldParent, $newParent));
+        event(app()->makeWith(ModifyCategoryEventContract::class, compact($item, $oldParent, $newParent)));
 
         Session::flash('success', 'Категория «'.$item->name.'» успешно '.$action);
 
@@ -153,10 +153,9 @@ class CategoriesController extends Controller
     public function destroy($id = null): JsonResponse
     {
         if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
+            $oldParent = $item->parent;
 
-            //TODO добавить detach
-
-            event(new ModifyCategoryEvent($item, $item->parent));
+            event(app()->makeWith(ModifyCategoryEventContract::class, compact($item, $oldParent)));
 
             $item->delete();
 
