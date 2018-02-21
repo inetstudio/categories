@@ -108,12 +108,13 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesUtilityController');
 
         // Events
-        $this->app->bind('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', 'InetStudio\Categories\Events\ModifyCategoryEvent');
+        $this->app->bind('InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract', 'InetStudio\Categories\Events\Back\ModifyCategoryEvent');
 
         // Requests
         $this->app->bind('InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract', 'InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest');
 
         // Services
+        $this->app->bind('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract', 'InetStudio\Categories\Services\Back\CategoriesService');
         $this->app->bind('InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract', 'InetStudio\Categories\Services\Front\CategoriesService');
 
         // Transformers

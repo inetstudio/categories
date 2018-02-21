@@ -1,9 +1,9 @@
 <?php
 
-namespace InetStudio\Categories\Events;
+namespace InetStudio\Categories\Events\Back;
 
 use Illuminate\Queue\SerializesModels;
-use InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract;
+use InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract;
 
 /**
  * Class ModifyCategoryEvent.
@@ -20,6 +20,7 @@ class ModifyCategoryEvent implements ModifyCategoryEventContract
      * Create a new event instance.
      *
      * ModifyCategoryEvent constructor.
+     *
      * @param $object
      * @param $oldParent
      * @param $newParent
