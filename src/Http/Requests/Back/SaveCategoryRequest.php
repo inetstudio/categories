@@ -56,6 +56,7 @@ class SaveCategoryRequest extends FormRequest implements SaveCategoryRequestCont
      * Правила проверки запроса.
      *
      * @param Request $request
+     *
      * @return array
      */
     public function rules(Request $request)

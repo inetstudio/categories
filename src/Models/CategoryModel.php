@@ -17,6 +17,7 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\Meta\Contracts\Models\Traits\MetableContract;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
+use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
 /**
@@ -62,7 +63,7 @@ use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
  * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withoutTrashed()
  * @mixin \Eloquent
  */
-class CategoryModel extends Model implements MetableContract, HasMediaConversions
+class CategoryModel extends Model implements CategoryModelContract, MetableContract, HasMediaConversions
 {
     use Metable;
     use Searchable;
@@ -155,7 +156,7 @@ class CategoryModel extends Model implements MetableContract, HasMediaConversion
     }
 
     /**
-     * Ссылка на категорию.
+     * Ссылка на объект.
      *
      * @return \Illuminate\Contracts\Routing\UrlGenerator|string
      */
@@ -170,31 +171,6 @@ class CategoryModel extends Model implements MetableContract, HasMediaConversion
         (new SlugService())->slug($instance, true);
 
         return $instance;
-    }
-
-    /**
-     * Получаем дерево категорий.
-     *
-     * @return array
-     */
-    public static function getTree()
-    {
-        $tree = self::defaultOrder()->get()->toTree();
-
-        $data = [];
-
-        $traverse = function ($categories) use (&$traverse, $data) {
-            foreach ($categories as $category) {
-                $data[$category->id]['id'] = $category->id;
-                $data[$category->id]['name'] = $category->name;
-                $data[$category->id]['href'] = $category->href;
-                $data[$category->id]['items'] = $traverse($category->children);
-            }
-
-            return $data;
-        };
-
-        return $traverse($tree);
     }
 
     /**

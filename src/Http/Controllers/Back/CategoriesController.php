@@ -2,176 +2,135 @@
 
 namespace InetStudio\Categories\Http\Controllers\Back;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
-use InetStudio\Categories\Models\CategoryModel;
-use InetStudio\Meta\Http\Controllers\Back\Traits\MetaManipulationsTrait;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\ImagesManipulationsTrait;
 use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract;
+use InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract;
+use InetStudio\Categories\Contracts\Http\Responses\Back\Categories\SaveResponseContract;
+use InetStudio\Categories\Contracts\Http\Responses\Back\Categories\IndexResponseContract;
+use InetStudio\Categories\Contracts\Http\Responses\Back\Categories\DestroyResponseContract;
 
 /**
  * Class CategoriesController.
  */
 class CategoriesController extends Controller implements CategoriesControllerContract
 {
-    use MetaManipulationsTrait;
-    use ImagesManipulationsTrait;
+    /**
+     * Используемые сервисы.
+     *
+     * @var array
+     */
+    private $services;
 
     /**
-     * Список категорий.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * PagesController constructor.
      */
-    public function index(): View
+    public function __construct()
     {
-        $tree = CategoryModel::getTree();
+        $this->services['categories'] = app()->make('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract');
+    }
 
-        return view('admin.module.categories::back.pages.index', [
-            'tree' => $tree,
+    /**
+     * Список объектов.
+     *
+     * @return IndexResponseContract
+     */
+    public function index(): IndexResponseContract
+    {
+        $tree = $this->services['categories']->getTree();
+
+        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\IndexResponseContract', [
+            'data' => compact('tree'),
         ]);
     }
 
     /**
-     * Добавление категории.
+     * Добавление объекта.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return FormResponseContract
      */
-    public function create(): View
+    public function create(): FormResponseContract
     {
-        $tree = CategoryModel::getTree();
+        $item = $this->services['categories']->getCategoryObject();
+        $tree = $this->services['categories']->getTree();
 
-        return view('admin.module.categories::back.pages.form', [
-            'item' => new CategoryModel(),
-            'tree' => $tree,
+        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract', [
+            'data' => compact('item', 'tree'),
         ]);
     }
 
     /**
-     * Создание категории.
+     * Создание объекта.
      *
      * @param SaveCategoryRequestContract $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return SaveResponseContract
      */
-    public function store(SaveCategoryRequestContract $request): RedirectResponse
+    public function store(SaveCategoryRequestContract $request): SaveResponseContract
     {
         return $this->save($request);
     }
 
     /**
-     * Редактирование категории.
+     * Редактирование объекта.
      *
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return FormResponseContract
      */
-    public function edit($id = null): View
+    public function edit($id = 0): FormResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
-            $tree = CategoryModel::getTree();
+        $item = $this->services['categories']->getCategoryObject($id);
+        $tree = $this->services['categories']->getTree();
 
-            return view('admin.module.categories::back.pages.form', [
-                'item' => $item,
-                'tree' => $tree,
-            ]);
-        } else {
-            abort(404);
-        }
+        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract', [
+            'data' => compact('item', 'tree'),
+        ]);
     }
 
     /**
-     * Обновление категории.
+     * Обновление объекта.
      *
      * @param SaveCategoryRequestContract $request
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return SaveResponseContract
      */
-    public function update(SaveCategoryRequestContract $request, $id = null): RedirectResponse
+    public function update(SaveCategoryRequestContract $request, int $id = 0): SaveResponseContract
     {
         return $this->save($request, $id);
     }
 
     /**
-     * Сохранение категории.
+     * Сохранение объекта.
      *
      * @param SaveCategoryRequestContract $request
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return SaveResponseContract
      */
-    private function save(SaveCategoryRequestContract $request, $id = null): RedirectResponse
+    private function save(SaveCategoryRequestContract $request, int $id = 0): SaveResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
-            $action = 'отредактирована';
-        } else {
-            $action = 'создана';
-            $item = new CategoryModel();
-        }
+        $item = $this->services['categories']->save($request, $id);
 
-        $oldParent = $item->parent;
-
-        $item->name = strip_tags($request->get('name'));
-        $item->slug = strip_tags($request->get('slug'));
-        $item->title = strip_tags($request->get('title'));
-        $item->description = strip_tags($request->input('description.text'));
-        $item->content = $request->input('content.text');
-        $item->save();
-
-        $parentId = $request->get('parent_id');
-
-        if ($parentId == 0) {
-            $item->saveAsRoot();
-        } else {
-            $item->appendToNode(CategoryModel::find($parentId))->save();
-        }
-
-        $newParent = $item->parent;
-
-        $this->saveMeta($item, $request);
-        $this->saveImages($item, $request, ['og_image', 'content'], 'categories');
-
-        event(app()->makeWith('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', [
-            'object' => $item,
-            'oldParent' => $oldParent,
-            'newParent' => $newParent,
-        ]));
-
-        Session::flash('success', 'Категория «'.$item->name.'» успешно '.$action);
-
-        return response()->redirectToRoute('back.categories.edit', $item->fresh()->id);
+        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\SaveResponseContract', [
+            'item' => $item,
+        ]);
     }
 
     /**
-     * Удаление категории.
+     * Удаление объекта.
      *
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return DestroyResponseContract
      */
-    public function destroy($id = null): JsonResponse
+    public function destroy(int $id = 0): DestroyResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = CategoryModel::find($id)) {
-            $oldParent = $item->parent;
+        $result = $this->services['categories']->destroy($id);
 
-            event(app()->makeWith('InetStudio\Categories\Contracts\Events\ModifyCategoryEventContract', [
-                'object' => $item,
-                'oldParent' => $oldParent,
-            ]));
-
-            $item->delete();
-
-            return response()->json([
-                'success' => true,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-            ]);
-        }
+        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\DestroyResponseContract', [
+            'result' => ($result === null) ? false : $result,
+        ]);
     }
 }

@@ -110,14 +110,31 @@ class CategoriesServiceProvider extends ServiceProvider
         // Events
         $this->app->bind('InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract', 'InetStudio\Categories\Events\Back\ModifyCategoryEvent');
 
+        // Models
+        $this->app->bind('InetStudio\Categories\Contracts\Models\CategoryModelContract', 'InetStudio\Categories\Models\CategoryModel');
+
+        // Repositories
+        $this->app->bind('InetStudio\Categories\Contracts\Repositories\Back\CategoriesRepositoryContract', 'InetStudio\Categories\Repositories\Back\CategoriesRepository');
+
         // Requests
         $this->app->bind('InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract', 'InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest');
+
+        // Responses
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\DestroyResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\DestroyResponse');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\FormResponse');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\IndexResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\IndexResponse');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\SaveResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\SaveResponse');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\MoveResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\MoveResponse');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SlugResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\SlugResponse');
+        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\SuggestionsResponse');
 
         // Services
         $this->app->bind('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract', 'InetStudio\Categories\Services\Back\CategoriesService');
         $this->app->bind('InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract', 'InetStudio\Categories\Services\Front\CategoriesService');
 
         // Transformers
+        $this->app->bind('InetStudio\Categories\Contracts\Transformers\Back\SuggestionTransformerContract', 'InetStudio\Categories\Transformers\Back\SuggestionTransformer');
+        $this->app->bind('InetStudio\Categories\Contracts\Transformers\Back\TreeTransformerContract', 'InetStudio\Categories\Transformers\Back\TreeTransformer');
         $this->app->bind('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract', 'InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer');
     }
 }

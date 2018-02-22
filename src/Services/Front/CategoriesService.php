@@ -3,9 +3,10 @@
 namespace InetStudio\Categories\Services\Front;
 
 use League\Fractal\Manager;
-use InetStudio\Categories\Models\CategoryModel;
 use League\Fractal\Serializer\DataArraySerializer;
+use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
+use InetStudio\Categories\Contracts\Repositories\Back\CategoriesRepositoryContract;
 
 /**
  * Class CategoriesService.
@@ -13,97 +14,70 @@ use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
 class CategoriesService implements CategoriesServiceContract
 {
     /**
-     * Получаем категорию по slug.
+     * @var CategoriesRepositoryContract
+     */
+    private $repository;
+
+    /**
+     * PagesService constructor.
+     *
+     * @param CategoriesRepositoryContract $repository
+     */
+    public function __construct(CategoriesRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Получаем объект по slug.
      *
      * @param string $slug
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public static function getCategoryBySlug(string $slug, bool $returnBuilder = false)
+    public function getCategoryBySlug(string $slug, bool $returnBuilder = false)
     {
-        $builder = CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
-            ->with(['meta' => function ($query) {
-                $query->select(['metable_id', 'metable_type', 'key', 'value']);
-            }, 'media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-            }])
-            ->whereSlug($slug);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
-
-        $category = $builder->first();
-
-        if (! $category) {
-            abort(404);
-        }
-
-        return $category;
+        return $this->repository->getCategoryBySlug($slug, $returnBuilder);
     }
 
     /**
-     * Родительская категория.
+     * Родительский объект.
      *
-     * @param CategoryModel $category
-     * @param bool $returnBuilder
-     *
-     * @return CategoryModel
-     */
-    public static function getParentCategory(CategoryModel $category, bool $returnBuilder = false)
-    {
-        if ($returnBuilder) {
-            $builder = CategoryModel::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
-                ->with(['meta' => function ($query) {
-                    $query->select(['metable_id', 'metable_type', 'key', 'value']);
-                }, 'media' => function ($query) {
-                    $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-                }])
-                ->where('id', $category->parent_id);
-
-            return $builder;
-        }
-
-        return $category->parent;
-    }
-
-    /**
-     * Подкатегории.
-     *
-     * @param CategoryModel $parentCategory
+     * @param CategoryModelContract $category
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public static function getSubCategories(CategoryModel $parentCategory, bool $returnBuilder = false)
+    public function getParentCategory(CategoryModelContract $category, bool $returnBuilder = false)
     {
-        $builder = CategoryModel::select(['id', 'name', 'slug', 'title'])
-            ->defaultOrder()
-            ->withDepth()
-            ->having('depth', '=', 1)
-            ->descendantsOf($parentCategory->id);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
-
-        return $builder->get();
+        return $this->repository->getParentCategory($category, $returnBuilder);
     }
 
     /**
-     * Получаем информацию по категориям для карты сайта.
+     * Подобъекты.
+     *
+     * @param CategoryModelContract $parentCategory
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getSubCategories(CategoryModelContract $parentCategory, bool $returnBuilder = false)
+    {
+        return $this->repository->getSubCategories($parentCategory, $returnBuilder);
+    }
+
+    /**
+     * Получаем информацию по объектам для карты сайта.
      *
      * @return array
      */
-    public static function getSiteMapItems(): array
+    public function getSiteMapItems(): array
     {
-        $categories = CategoryModel::select(['slug', 'created_at', 'updated_at'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $items = $this->repository->getAllCategories();
 
         $resource = app()->make('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract')
-            ->transformCollection($categories);
+            ->transformCollection($items);
 
         $manager = new Manager();
         $manager->setSerializer(new DataArraySerializer());

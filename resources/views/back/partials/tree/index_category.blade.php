@@ -8,9 +8,9 @@
             <a href="#" class="btn btn-xs btn-danger delete" data-url="{{ route('back.categories.destroy', [$item['id']]) }}"><i class="fa fa-times"></i></a>
         </div>
     </div>
-    @if (count($item['items']) > 0)
+    @if (count($item['items']['data']) > 0)
         <ol class="dd-list">
-            @foreach($item['items'] as $item)
+            @foreach($item['items']['data'] as $item)
                 @include('admin.module.categories::back.partials.tree.index_category', $item)
             @endforeach
         </ol>

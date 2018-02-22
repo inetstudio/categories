@@ -1,5 +1,7 @@
+@inject('categoriesService', 'InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract')
+
 @php
-    $categories = \InetStudio\Categories\Models\CategoryModel::getTree();
+    $categories = $categoriesService->getTree();
     $item = $value;
 @endphp
 
