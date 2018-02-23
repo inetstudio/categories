@@ -5,8 +5,8 @@ namespace InetStudio\Categories\Models\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use InetStudio\Categories\Models\CategoryModel;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 
 /**
  * Trait HasCategories.
@@ -27,7 +27,8 @@ trait HasCategories
      */
     public static function getCategoryClassName(): string
     {
-        return CategoryModel::class;
+        $model = app()->make('InetStudio\Categories\Contracts\Models\CategoryModelContract');
+        return get_class($model);
     }
 
     /**
@@ -43,7 +44,7 @@ trait HasCategories
     /**
      * Attach the given category(ies) to the model.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return void
      */
@@ -78,7 +79,7 @@ trait HasCategories
     }
 
     /**
-     * Get the category list.
+     * Получаем список категорий.
      *
      * @param string $keyColumn
      *
@@ -93,7 +94,7 @@ trait HasCategories
      * Scope query with all the given categories.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -116,7 +117,7 @@ trait HasCategories
      * Scope query with any of the given categories.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -135,7 +136,7 @@ trait HasCategories
      * Scope query with any of the given categories.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -149,7 +150,7 @@ trait HasCategories
      * Scope query without the given categories.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      * @param string $column
      *
      * @return \Illuminate\Database\Eloquent\Builder
@@ -179,7 +180,7 @@ trait HasCategories
     /**
      * Attach the given category(ies) to the model.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return $this
      */
@@ -191,9 +192,9 @@ trait HasCategories
     }
 
     /**
-     * Sync the given category(ies) to the model.
+     * Синхронизируем категории модели.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel|null $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract|null $categories
      *
      * @return $this
      */
@@ -207,7 +208,7 @@ trait HasCategories
     /**
      * Detach the given category(ies) from the model.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return $this
      */
@@ -221,7 +222,7 @@ trait HasCategories
     /**
      * Determine if the model has any the given categories.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return bool
      */
@@ -238,7 +239,7 @@ trait HasCategories
         }
 
         // Single category model
-        if ($categories instanceof CategoryModel) {
+        if ($categories instanceof CategoryModelContract) {
             return $this->categories->contains('slug', $categories->slug);
         }
 
@@ -263,7 +264,7 @@ trait HasCategories
     /**
      * Determine if the model has any the given categories.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return bool
      */
@@ -275,7 +276,7 @@ trait HasCategories
     /**
      * Determine if the model has all of the given categories.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return bool
      */
@@ -292,7 +293,7 @@ trait HasCategories
         }
 
         // Single category model
-        if ($categories instanceof Category) {
+        if ($categories instanceof CategoryModelContract) {
             return $this->categories->contains('slug', $categories->slug);
         }
 
@@ -319,7 +320,7 @@ trait HasCategories
     /**
      * Set the given category(ies) to the model.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      * @param string $action
      *
      * @return void
@@ -345,7 +346,7 @@ trait HasCategories
     /**
      * Hydrate categories.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return \Illuminate\Support\Collection
      */
@@ -363,7 +364,7 @@ trait HasCategories
     /**
      * Determine if the given category(ies) are string based.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return bool
      */
@@ -375,7 +376,7 @@ trait HasCategories
     /**
      * Determine if the given category(ies) are integer based.
      *
-     * @param int|string|array|\ArrayAccess|CategoryModel $categories
+     * @param int|string|array|\ArrayAccess|CategoryModelContract $categories
      *
      * @return bool
      */
