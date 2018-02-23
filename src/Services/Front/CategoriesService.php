@@ -38,7 +38,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getCategoryBySlug(string $slug, bool $returnBuilder = false)
     {
-        return $this->repository->getCategoryBySlug($slug, $returnBuilder);
+        return $this->repository->getItemBySlug($slug, $returnBuilder);
     }
 
     /**
@@ -51,7 +51,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getParentCategory(CategoryModelContract $category, bool $returnBuilder = false)
     {
-        return $this->repository->getParentCategory($category, $returnBuilder);
+        return $this->repository->getParentItem($category, $returnBuilder);
     }
 
     /**
@@ -64,7 +64,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSubCategories(CategoryModelContract $parentCategory, bool $returnBuilder = false)
     {
-        return $this->repository->getSubCategories($parentCategory, $returnBuilder);
+        return $this->repository->getSubItems($parentCategory, $returnBuilder);
     }
 
     /**
@@ -74,7 +74,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSiteMapItems(): array
     {
-        $items = $this->repository->getAllCategories();
+        $items = $this->repository->getAllItems();
 
         $resource = app()->make('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract')
             ->transformCollection($items);

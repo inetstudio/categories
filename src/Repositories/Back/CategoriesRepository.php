@@ -34,7 +34,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return CategoryModelContract
      */
-    public function getByID(int $id): CategoryModelContract
+    public function getItemByID(int $id): CategoryModelContract
     {
         if (! (! is_null($id) && $id > 0 && $item = $this->model::find($id))) {
             $item = $this->model;
@@ -51,7 +51,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return Collection
      */
-    public function getByIDs($ids, bool $returnBuilder = false): Collection
+    public function getItemsByIDs($ids, bool $returnBuilder = false): Collection
     {
         $builder = $this->model::select(['id', 'name', 'slug'])
             ->whereIn('id', (array) $ids);
@@ -73,7 +73,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function save(SaveCategoryRequestContract $request, int $id): CategoryModelContract
     {
-        $item = $this->getByID($id);
+        $item = $this->getItemByID($id);
 
         $item->name = strip_tags($request->get('name'));
         $item->slug = strip_tags($request->get('slug'));
@@ -94,7 +94,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function destroy($id): ?bool
     {
-        return $this->getByID($id)->delete();
+        return $this->getItemByID($id)->delete();
     }
 
     /**
@@ -127,7 +127,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return Collection
      */
-    public function searchByField(string $field, string $value): Collection
+    public function searchItemsByField(string $field, string $value): Collection
     {
         return $this->model::select(['id', 'name as title', 'slug'])->where($field, 'LIKE', '%'.$value.'%')->get();
     }
@@ -139,7 +139,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return mixed
      */
-    public function getAllCategories(bool $returnBuilder = false)
+    public function getAllItems(bool $returnBuilder = false)
     {
         $builder = $this->model::select(['id', 'name', 'slug', 'created_at', 'updated_at'])
             ->orderBy('created_at', 'desc');
@@ -159,7 +159,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return mixed
      */
-    public function getCategoryBySlug(string $slug, bool $returnBuilder = false)
+    public function getItemBySlug(string $slug, bool $returnBuilder = false)
     {
         $builder = $this->model::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
             ->with(['meta' => function ($query) {
@@ -186,7 +186,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return mixed
      */
-    public function getParentCategory(CategoryModelContract $category, bool $returnBuilder = false)
+    public function getParentItem(CategoryModelContract $category, bool $returnBuilder = false)
     {
         if ($returnBuilder) {
             $builder = $this->model::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
@@ -211,7 +211,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return mixed
      */
-    public function getSubCategories(CategoryModelContract $parentCategory, bool $returnBuilder = false)
+    public function getSubItems(CategoryModelContract $parentCategory, bool $returnBuilder = false)
     {
         $builder = $this->model::select(['id', 'name', 'slug', 'title'])
             ->defaultOrder()

@@ -39,7 +39,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getCategoryObject(int $id = 0)
     {
-        return $this->repository->getByID($id);
+        return $this->repository->getItemByID($id);
     }
 
     /**
@@ -62,7 +62,7 @@ class CategoriesService implements CategoriesServiceContract
         if ($parentId == 0) {
             $item->saveAsRoot();
         } else {
-            $item->appendToNode($this->repository->getByID($parentId))->save();
+            $item->appendToNode($this->repository->getItemByID($parentId))->save();
         }
 
         $newParent = $item->parent;
@@ -94,7 +94,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function destroy(int $id): ?bool
     {
-        $item = $this->repository->getByID($id);
+        $item = $this->repository->getItemByID($id);
 
         $oldParent = $item->parent;
 
@@ -116,7 +116,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSuggestions(string $search, $type): array
     {
-        $items = $this->repository->searchByField('name', $search);
+        $items = $this->repository->searchItemsByField('name', $search);
 
         $resource = (app()->makeWith('InetStudio\Categories\Contracts\Transformers\Back\SuggestionTransformerContract', [
             'type' => $type,
@@ -183,7 +183,7 @@ class CategoriesService implements CategoriesServiceContract
     {
         if ($request->filled('categories')) {
             $categories = explode(',', $request->get('categories'));
-            $item->recategorize($this->repository->getByIDs($categories));
+            $item->recategorize($this->repository->getItemsByIDs($categories));
         } else {
             $item->uncategorize($item->categories);
         }
