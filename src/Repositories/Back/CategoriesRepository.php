@@ -189,12 +189,12 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Родительский объект.
      *
-     * @param CategoryModelContract $category
+     * @param CategoryModelContract $item
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getParentItem(CategoryModelContract $category, bool $returnBuilder = false)
+    public function getParentItem(CategoryModelContract $item, bool $returnBuilder = false)
     {
         if ($returnBuilder) {
             $builder = $this->model::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
@@ -203,34 +203,35 @@ class CategoriesRepository implements CategoriesRepositoryContract
                 }, 'media' => function ($query) {
                     $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
                 }])
-                ->where('id', $category->parent_id);
+                ->where('id', $item->parent_id);
 
             return $builder;
         }
 
-        return $category->parent;
+        return $item->parent;
     }
 
     /**
      * Подобъекты.
      *
-     * @param CategoryModelContract $parentCategory
+     * @param CategoryModelContract $parentItem
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getSubItems(CategoryModelContract $parentCategory, bool $returnBuilder = false)
+    public function getSubItems(CategoryModelContract $parentItem, bool $returnBuilder = false)
     {
         $builder = $this->model::select(['id', 'name', 'slug', 'title'])
             ->defaultOrder()
             ->withDepth()
-            ->having('depth', '=', 1)
-            ->descendantsOf($parentCategory->id);
+            ->having('depth', '=', 1);
 
         if ($returnBuilder) {
+            $builder = $builder->where('parent_id', $parentItem->id);
+
             return $builder;
         }
 
-        return $builder->get();
+        return $builder->descendantsOf($parentItem->id);
     }
 }
