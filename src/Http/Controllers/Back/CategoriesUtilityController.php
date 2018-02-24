@@ -44,7 +44,7 @@ class CategoriesUtilityController extends Controller implements CategoriesUtilit
         $search = $request->get('q');
         $type = $request->get('type');
 
-        $data = app()->make('InetStudio\Categories\Services\Back\CategoriesService')
+        $data = app()->make('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract')
             ->getSuggestions($search, $type);
 
         return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', [

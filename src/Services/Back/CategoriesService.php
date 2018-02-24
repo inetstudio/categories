@@ -43,6 +43,19 @@ class CategoriesService implements CategoriesServiceContract
     }
 
     /**
+     * Получаем объекты по списку id.
+     *
+     * @param array|int $ids
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getCategoriesByIDs($ids, bool $returnBuilder = false)
+    {
+        return $this->repository->getItemsByIDs($ids, $returnBuilder);
+    }
+
+    /**
      * Сохраняем модель.
      *
      * @param SaveCategoryRequestContract $request
