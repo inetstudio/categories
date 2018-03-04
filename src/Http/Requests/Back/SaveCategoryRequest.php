@@ -36,7 +36,7 @@ class SaveCategoryRequest extends FormRequest implements SaveCategoryRequestCont
 
             'meta.og:title.max' => 'Поле «og:itle» не должно превышать 255 символов',
             'meta.og:description.max' => 'Поле «og:description» не должно превышать 255 символов',
-            
+
             'og_image.crop.default.json' => 'Область отображения должна быть представлена в виде JSON',
 
             'name.required' => 'Поле «Название» обязательно для заполнения',
@@ -70,7 +70,7 @@ class SaveCategoryRequest extends FormRequest implements SaveCategoryRequestCont
 
             'og_image.crop.default' => [
                 'nullable', 'json',
-                new CropSize(968,475,'min', ''),
+                new CropSize(968, 475, 'min', ''),
             ],
 
             'name' => 'required|max:255',

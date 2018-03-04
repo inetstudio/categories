@@ -5,8 +5,8 @@ namespace InetStudio\Categories\Repositories;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
-use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
+use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 
 /**
  * Class CategoriesRepository.

@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Session;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract;
-use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
+use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 
 /**
  * Class CategoriesService.
