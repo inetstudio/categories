@@ -4,6 +4,7 @@ namespace InetStudio\Categories\Http\Requests\Back;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use InetStudio\Uploads\Validation\Rules\CropSize;
 use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 
 /**
@@ -35,8 +36,7 @@ class SaveCategoryRequest extends FormRequest implements SaveCategoryRequestCont
 
             'meta.og:title.max' => 'Поле «og:itle» не должно превышать 255 символов',
             'meta.og:description.max' => 'Поле «og:description» не должно превышать 255 символов',
-
-            'og_image.crop.default.crop_size' => 'Минимальный размер области — 968x475 пикселей',
+            
             'og_image.crop.default.json' => 'Область отображения должна быть представлена в виде JSON',
 
             'name.required' => 'Поле «Название» обязательно для заполнения',
@@ -68,7 +68,10 @@ class SaveCategoryRequest extends FormRequest implements SaveCategoryRequestCont
             'meta.og:title' => 'max:255',
             'meta.og:description' => 'max:255',
 
-            'og_image.crop.default' => 'nullable|json|crop_size:968,475,min',
+            'og_image.crop.default' => [
+                'nullable', 'json',
+                new CropSize(968,475,'min', ''),
+            ],
 
             'name' => 'required|max:255',
             'title' => 'required|max:255',

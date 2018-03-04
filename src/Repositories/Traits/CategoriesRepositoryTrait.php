@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Categories\Repositories\Back\Traits;
+namespace InetStudio\Categories\Repositories\Traits;
 
 /**
  * Trait CategoriesRepositoryTrait.

@@ -8,7 +8,7 @@ use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract;
 use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
-use InetStudio\Categories\Contracts\Repositories\Back\CategoriesRepositoryContract;
+use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 
 /**
  * Class CategoriesService.
@@ -83,9 +83,9 @@ class CategoriesService implements CategoriesServiceContract
         app()->make('InetStudio\Meta\Contracts\Services\Back\MetaServiceContract')
             ->attachToObject($request, $item);
 
-        $images = (config('categories.images.conversions')) ? array_keys(config('categories.images.conversions')) : [];
-        app()->make('InetStudio\AdminPanel\Contracts\Services\Back\Images\ImagesServiceContract')
-            ->attachToObject($request, $item, $images, 'categories');
+        $images = (config('categories.images.conversions.category')) ? array_keys(config('categories.images.conversions.category')) : [];
+        app()->make('InetStudio\Uploads\Contracts\Services\Back\ImagesServiceContract')
+            ->attachToObject($request, $item, $images, 'categories', 'category');
 
         event(app()->makeWith('InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract', [
             'object' => $item,
@@ -107,15 +107,6 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function destroy(int $id): ?bool
     {
-        $item = $this->repository->getItemByID($id);
-
-        $oldParent = $item->parent;
-
-        event(app()->makeWith('InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract', [
-            'object' => $item,
-            'oldParent' => $oldParent,
-        ]));
-
         return $this->repository->destroy($id);
     }
 

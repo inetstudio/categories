@@ -4,14 +4,12 @@ namespace InetStudio\Categories\Models;
 
 use Cocur\Slugify\Slugify;
 use Laravel\Scout\Searchable;
-use Spatie\MediaLibrary\Media;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
-use Spatie\Image\Exceptions\InvalidManipulation;
+use InetStudio\Uploads\Models\Traits\HasImages;
 use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
@@ -20,55 +18,12 @@ use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
-/**
- * InetStudio\Categories\Models\CategoryModel.
- *
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property string $title
- * @property string|null $description
- * @property string|null $content
- * @property int $_lft
- * @property int $_rgt
- * @property int|null $parent_id
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property \Carbon\Carbon|null $deleted_at
- * @property-read \Kalnoy\Nestedset\Collection|\InetStudio\Categories\Models\CategoryModel[] $children
- * @property-read \Illuminate\Database\Eloquent\Collection|\InetStudio\SimpleCounters\Models\SimpleCounterModel[] $counters
- * @property-read \Illuminate\Contracts\Routing\UrlGenerator|string $href
- * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\MediaLibrary\Media[] $media
- * @property-read \Illuminate\Database\Eloquent\Collection|\Phoenix\EloquentMeta\Meta[] $meta
- * @property-read \InetStudio\Categories\Models\CategoryModel|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection|\Venturecraft\Revisionable\Revision[] $revisionHistory
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel d()
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel findSimilarSlugs($attribute, $config, $slug)
- * @method static bool|null forceDelete()
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel onlyTrashed()
- * @method static bool|null restore()
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereLft($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereParentId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereRgt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\InetStudio\Categories\Models\CategoryModel whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withTrashed()
- * @method static \Illuminate\Database\Query\Builder|\InetStudio\Categories\Models\CategoryModel withoutTrashed()
- * @mixin \Eloquent
- */
 class CategoryModel extends Model implements CategoryModelContract, MetableContract, HasMediaConversions
 {
     use Metable;
+    use HasImages;
     use Searchable;
     use SoftDeletes;
-    use HasMediaTrait;
     use RevisionableTrait;
     use Sluggable, NodeTrait {
         NodeTrait::replicate as replicateNode;
@@ -78,6 +33,11 @@ class CategoryModel extends Model implements CategoryModelContract, MetableContr
     use HasSimpleCountersTrait;
 
     const HREF = '/category/';
+
+    protected $images = [
+        'config' => 'categories',
+        'model' => 'category',
+    ];
 
     /**
      * Связанная с моделью таблица.
@@ -171,47 +131,5 @@ class CategoryModel extends Model implements CategoryModelContract, MetableContr
         (new SlugService())->slug($instance, true);
 
         return $instance;
-    }
-
-    /**
-     * Регистрируем преобразования изображений.
-     *
-     * @param Media|null $media
-     * @throws InvalidManipulation
-     */
-    public function registerMediaConversions(Media $media = null)
-    {
-        $quality = (config('categories.images.quality')) ? config('categories.images.quality') : 75;
-
-        if (config('categories.images.conversions')) {
-            foreach (config('categories.images.conversions') as $collection => $image) {
-                foreach ($image as $crop) {
-                    foreach ($crop as $conversion) {
-                        $imageConversion = $this->addMediaConversion($conversion['name'])->nonQueued();
-
-                        if (isset($conversion['size']['width'])) {
-                            $imageConversion->width($conversion['size']['width']);
-                        }
-
-                        if (isset($conversion['size']['height'])) {
-                            $imageConversion->height($conversion['size']['height']);
-                        }
-
-                        if (isset($conversion['fit']['width']) && isset($conversion['fit']['height'])) {
-                            $imageConversion->fit('max', $conversion['fit']['width'], $conversion['fit']['height']);
-                        }
-
-                        if (isset($conversion['quality'])) {
-                            $imageConversion->quality($conversion['quality']);
-                            $imageConversion->optimize();
-                        } else {
-                            $imageConversion->quality($quality);
-                        }
-
-                        $imageConversion->performOnCollections($collection);
-                    }
-                }
-            }
-        }
     }
 }

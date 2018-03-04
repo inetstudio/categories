@@ -32,13 +32,13 @@
 
         {!! Form::info() !!}
 
-        {!! Form::open(['url' => (!$item->id) ? route('back.categories.store') : route('back.categories.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['url' => (! $item->id) ? route('back.categories.store') : route('back.categories.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
 
         @if ($item->id)
             {{ method_field('PUT') }}
         @endif
 
-        {!! Form::hidden('category_id', (!$item->id) ? '' : $item->id) !!}
+        {!! Form::hidden('category_id', (! $item->id) ? '' : $item->id) !!}
 
         {!! Form::meta('', $item) !!}
 

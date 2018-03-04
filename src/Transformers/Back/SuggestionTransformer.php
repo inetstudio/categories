@@ -18,7 +18,7 @@ class SuggestionTransformer extends TransformerAbstract implements SuggestionTra
     private $type;
 
     /**
-     * PagesSiteMapTransformer constructor.
+     * SuggestionTransformer constructor.
      *
      * @param $type
      */
@@ -46,7 +46,7 @@ class SuggestionTransformer extends TransformerAbstract implements SuggestionTra
                 'data' => [
                     'id' => $item->id,
                     'type' => $modelClass,
-                    'title' => $item->title,
+                    'title' => $item->name,
                     'path' => parse_url($item->href, PHP_URL_PATH),
                     'href' => $item->href,
                 ],

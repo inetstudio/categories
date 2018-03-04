@@ -20,6 +20,7 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
+        $this->registerObservers();
     }
 
     /**
@@ -97,6 +98,16 @@ class CategoriesServiceProvider extends ServiceProvider
     }
 
     /**
+     * Регистрация наблюдателей.
+     *
+     * @return void
+     */
+    public function registerObservers(): void
+    {
+        $this->app->make('InetStudio\Categories\Contracts\Models\CategoryModelContract')::observe($this->app->make('InetStudio\Categories\Contracts\Observers\CategoryObserverContract'));
+    }
+
+    /**
      * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
      *
      * @return void
@@ -113,8 +124,11 @@ class CategoriesServiceProvider extends ServiceProvider
         // Models
         $this->app->bind('InetStudio\Categories\Contracts\Models\CategoryModelContract', 'InetStudio\Categories\Models\CategoryModel');
 
+        // Observers
+        $this->app->bind('InetStudio\Categories\Contracts\Observers\CategoryObserverContract', 'InetStudio\Categories\Observers\CategoryObserver');
+
         // Repositories
-        $this->app->bind('InetStudio\Categories\Contracts\Repositories\Back\CategoriesRepositoryContract', 'InetStudio\Categories\Repositories\Back\CategoriesRepository');
+        $this->app->bind('InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract', 'InetStudio\Categories\Repositories\CategoriesRepository');
 
         // Requests
         $this->app->bind('InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract', 'InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest');
@@ -129,6 +143,7 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\SuggestionsResponse');
 
         // Services
+        $this->app->bind('InetStudio\Categories\Contracts\Services\Back\CategoriesObserverServiceContract', 'InetStudio\Categories\Services\Back\CategoriesObserverService');
         $this->app->bind('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract', 'InetStudio\Categories\Services\Back\CategoriesService');
         $this->app->bind('InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract', 'InetStudio\Categories\Services\Front\CategoriesService');
 

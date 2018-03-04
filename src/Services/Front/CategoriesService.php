@@ -6,7 +6,7 @@ use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
-use InetStudio\Categories\Contracts\Repositories\Back\CategoriesRepositoryContract;
+use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 
 /**
  * Class CategoriesService.
@@ -19,7 +19,7 @@ class CategoriesService implements CategoriesServiceContract
     private $repository;
 
     /**
-     * PagesService constructor.
+     * CategoriesService constructor.
      *
      * @param CategoriesRepositoryContract $repository
      */

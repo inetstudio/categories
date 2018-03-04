@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Categories\Contracts\Repositories\Back;
+namespace InetStudio\Categories\Contracts\Repositories;
 
 /**
  * Interface CategoriesRepositoryContract.

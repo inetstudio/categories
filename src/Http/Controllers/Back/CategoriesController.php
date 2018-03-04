@@ -23,7 +23,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
     private $services;
 
     /**
-     * PagesController constructor.
+     * CategoriesController constructor.
      */
     public function __construct()
     {

@@ -1,11 +1,12 @@
 <?php
 
-namespace InetStudio\Categories\Repositories\Back;
+namespace InetStudio\Categories\Repositories;
 
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
-use InetStudio\Categories\Contracts\Repositories\Back\CategoriesRepositoryContract;
+use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 
 /**
  * Class CategoriesRepository.
@@ -53,7 +54,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function getItemsByIDs($ids, bool $returnBuilder = false)
     {
-        $builder = $this->model::select(['id', 'name', 'slug'])
+        $builder = $this->getItemsQuery()
             ->whereIn('id', (array) $ids);
 
         if ($returnBuilder) {
@@ -78,7 +79,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
         $item->name = strip_tags($request->get('name'));
         $item->slug = strip_tags($request->get('slug'));
         $item->title = strip_tags($request->get('title'));
-        $item->description = strip_tags($request->input('description.text'));
+        $item->description = $request->input('description.text');
         $item->content = $request->input('content.text');
         $item->save();
 
@@ -130,7 +131,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function searchItemsByField(string $field, string $value, bool $returnBuilder = false)
     {
-        $builder = $this->model::select(['id', 'name as title', 'slug'])
+        $builder = $this->getItemsQuery()
             ->where($field, 'LIKE', '%'.$value.'%');
 
         if ($returnBuilder) {
@@ -149,7 +150,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function getAllItems(bool $returnBuilder = false)
     {
-        $builder = $this->model::select(['id', 'name', 'slug', 'created_at', 'updated_at'])
+        $builder = $this->getItemsQuery(['created_at', 'updated_at'])
             ->orderBy('created_at', 'desc');
 
         if ($returnBuilder) {
@@ -169,12 +170,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function getItemBySlug(string $slug, bool $returnBuilder = false)
     {
-        $builder = $this->model::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
-            ->with(['meta' => function ($query) {
-                $query->select(['metable_id', 'metable_type', 'key', 'value']);
-            }, 'media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-            }])
+        $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
             ->whereSlug($slug);
 
         if ($returnBuilder) {
@@ -197,12 +193,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
     public function getParentItem(CategoryModelContract $item, bool $returnBuilder = false)
     {
         if ($returnBuilder) {
-            $builder = $this->model::select(['id', 'parent_id', 'slug', 'name', 'title', 'description', 'content'])
-                ->with(['meta' => function ($query) {
-                    $query->select(['metable_id', 'metable_type', 'key', 'value']);
-                }, 'media' => function ($query) {
-                    $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-                }])
+            $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
                 ->where('id', $item->parent_id);
 
             return $builder;
@@ -221,7 +212,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function getSubItems(CategoryModelContract $parentItem, bool $returnBuilder = false)
     {
-        $builder = $this->model::select(['id', 'name', 'slug', 'title'])
+        $builder = $this->getItemsQuery(['title'])
             ->defaultOrder()
             ->withDepth()
             ->having('depth', '=', 1);
@@ -233,5 +224,31 @@ class CategoriesRepository implements CategoriesRepositoryContract
         }
 
         return $builder->descendantsOf($parentItem->id);
+    }
+
+    /**
+     * Возвращаем запрос на получение объектов.
+     *
+     * @param array $extColumns
+     * @param array $with
+     *
+     * @return Builder
+     */
+    protected function getItemsQuery($extColumns = [], $with = []): Builder
+    {
+        $defaultColumns = ['id', 'name', 'slug'];
+
+        $relations = [
+            'meta' => function ($query) {
+                $query->select(['metable_id', 'metable_type', 'key', 'value']);
+            },
+
+            'media' => function ($query) {
+                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
+            },
+        ];
+
+        return $this->model::select(array_merge($defaultColumns, $extColumns))
+            ->with(array_intersect_key($relations, array_flip($with)));
     }
 }
