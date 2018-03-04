@@ -28,6 +28,7 @@ trait HasCategories
     public static function getCategoryClassName(): string
     {
         $model = app()->make('InetStudio\Categories\Contracts\Models\CategoryModelContract');
+
         return get_class($model);
     }
 
