@@ -10,7 +10,7 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.5.*",
+      "inetstudio/admin-panel": "1.6.*",
       "kalnoy/nestedset": "^4.3"
     },
     "autoload": {
