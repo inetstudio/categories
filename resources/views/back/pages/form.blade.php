@@ -6,11 +6,6 @@
 
 @section('title', $title)
 
-@pushonce('styles:jstree')
-    <!-- JSTREE -->
-    <link href="{!! asset('admin/css/plugins/jstree/style.min.css') !!}" rel="stylesheet">
-@endpushonce
-
 @section('content')
 
     @push('breadcrumbs')
@@ -32,7 +27,7 @@
 
         {!! Form::info() !!}
 
-        {!! Form::open(['url' => (! $item->id) ? route('back.categories.store') : route('back.categories.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['url' => (! $item->id) ? route('back.categories.store') : route('back.categories.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'categories-package form-horizontal']) !!}
 
         @if ($item->id)
             {{ method_field('PUT') }}
@@ -128,13 +123,12 @@
 
                                     <div class="col-sm-10">
                                         @if (count($tree) > 0)
-                                            <div class="jstree-list" data-target="parent_id" data-multiple="false" data-cascade="">
+                                            <div class="categories-tree" data-target="parent_id" data-multiple="false" data-cascade="" data-selected="{{ old('parent_id') ? old('parent_id') : '' }}">
                                                 <ul>
                                                     <li id="parentCategoryId_0" data-jstree='{"opened":true @if (intval($item->parent_id) == 0),"selected":true @endif}'>Категории
                                                         <ul>
                                                             @foreach ($tree as $treeItem)
                                                                 @include('admin.module.categories::back.partials.tree.form_category', [
-                                                                    'id' => 'parentCategoryId',
                                                                     'item' => $treeItem,
                                                                     'currentId' => $item->id,
                                                                     'selected' => [intval($item->parent_id)],
@@ -165,8 +159,3 @@
         {!! Form::close()!!}
     </div>
 @endsection
-
-@pushonce('scripts:jstree')
-    <!-- JSTREE -->
-    <script src="{!! asset('admin/js/plugins/jstree/jstree.min.js') !!}"></script>
-@endpushonce

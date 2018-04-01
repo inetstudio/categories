@@ -6,16 +6,6 @@
 
 @section('title', $title)
 
-@pushonce('styles:nestable')
-    <!-- CUSTOM STYLE -->
-    <link href="{!! asset('admin/css/plugins/nestable/jquery.nestable.min.css') !!}" rel="stylesheet">
-@endpushonce
-
-@pushonce('styles:categories_custom')
-    <!-- CUSTOM STYLE -->
-    <link href="{!! asset('admin/css/modules/categories/custom.css') !!}" rel="stylesheet">
-@endpushonce
-
 @section('content')
 
     @push('breadcrumbs')
@@ -25,12 +15,12 @@
     <div class="wrapper wrapper-content">
         <div class="row">
             <div class="col-lg-12">
-                <div class="ibox float-e-margins">
+                <div class="ibox float-e-margins categories-package">
                     <div class="ibox-title">
                         <a href="{{ route('back.categories.create') }}" class="btn btn-sm btn-primary btn-lg">Добавить</a>
                     </div>
                     <div class="ibox-content">
-                        <div class="dd nested-list" data-order-url="{{ route('back.categories.move') }}">
+                        <div class="dd categories-list" data-order-url="{{ route('back.categories.move') }}">
 
                             @if (count($tree) > 0)
                                 <ol class="dd-list">
@@ -49,8 +39,3 @@
         </div>
     </div>
 @endsection
-
-@pushonce('scripts:nestable')
-    <!-- Nestable List -->
-    <script src="{!! asset('admin/js/plugins/nestable/jquery.nestable.min.js') !!}"></script>
-@endpushonce
