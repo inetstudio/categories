@@ -56,10 +56,6 @@ class CategoriesServiceProvider extends ServiceProvider
     protected function registerPublishes(): void
     {
         $this->publishes([
-            __DIR__.'/../../public' => public_path(),
-        ], 'public');
-
-        $this->publishes([
             __DIR__.'/../../config/categories.php' => config_path('categories.php'),
         ], 'config');
 

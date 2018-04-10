@@ -90,16 +90,6 @@ class SetupCommand extends Command
             ],
             [
                 'type' => 'artisan',
-                'description' => 'Publish public',
-                'command' => 'vendor:publish',
-                'params' => [
-                    '--provider' => 'InetStudio\Categories\Providers\CategoriesServiceProvider',
-                    '--tag' => 'public',
-                    '--force' => true,
-                ],
-            ],
-            [
-                'type' => 'artisan',
                 'description' => 'Publish config',
                 'command' => 'vendor:publish',
                 'params' => [
