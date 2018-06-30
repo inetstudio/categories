@@ -119,16 +119,14 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Ищем объекты.
      *
-     * @param string $field
-     * @param $value
+     * @param array $conditions
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function searchItemsByField(string $field, string $value, bool $returnBuilder = false)
+    public function searchItems(array $conditions, bool $returnBuilder = false)
     {
-        $builder = $this->getItemsQuery()
-            ->where($field, 'LIKE', '%'.$value.'%');
+        $builder = $this->getItemsQuery([])->where($conditions);
 
         if ($returnBuilder) {
             return $builder;

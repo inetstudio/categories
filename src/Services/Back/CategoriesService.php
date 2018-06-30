@@ -120,7 +120,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSuggestions(string $search, $type): array
     {
-        $items = $this->repository->searchItemsByField('name', $search);
+        $items = $this->repository->searchItems([['name', 'LIKE', '%'.$search.'%']]);
 
         $resource = (app()->makeWith('InetStudio\Categories\Contracts\Transformers\Back\SuggestionTransformerContract', [
             'type' => $type,

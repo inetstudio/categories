@@ -11,19 +11,15 @@ trait CategoriesRepositoryTrait
      * Получаем объекты по категории.
      *
      * @param string $slug
+     * @param array $extColumns
+     * @param array $with
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getItemsByCategory(string $slug, bool $returnBuilder = false)
+    public function getItemsByCategory(string $slug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
     {
-        $builder = $this->model::select(['id', 'title', 'description', 'slug'])
-            ->with(['meta' => function ($query) {
-                $query->select(['metable_id', 'metable_type', 'key', 'value']);
-            }, 'media' => function ($query) {
-                $query->select(['id', 'model_id', 'model_type', 'collection_name', 'file_name', 'disk']);
-            }])
-            ->withCategories($slug);
+        $builder = $this->getItemsQuery($extColumns, $with)->withCategories($slug);
 
         if ($returnBuilder) {
             return $builder;
