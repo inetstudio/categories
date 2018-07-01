@@ -34,7 +34,7 @@
         @endif
 
         {!! Form::hidden('category_id', (! $item->id) ? '' : $item->id, ['id' => 'object-id']) !!}
-        
+
         {!! Form::hidden('category_type', get_class($item), ['id' => 'object-type']) !!}
 
         {!! Form::meta('', $item) !!}

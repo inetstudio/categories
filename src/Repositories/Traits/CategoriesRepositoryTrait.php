@@ -27,4 +27,25 @@ trait CategoriesRepositoryTrait
 
         return $builder->get();
     }
+
+    /**
+     * Получаем объекты из категорий.
+     *
+     * @param $categories
+     * @param array $extColumns
+     * @param array $with
+     * @param bool $returnBuilder
+     *
+     * @return mixed
+     */
+    public function getItemsFromCategories($categories, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    {
+        $builder = $this->getItemsQuery($extColumns, $with)->withCategories($categories, 'categories.slug');
+
+        if ($returnBuilder) {
+            return $builder;
+        }
+
+        return $builder->get();
+    }
 }
