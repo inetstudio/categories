@@ -6,7 +6,6 @@ use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
-use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 
 /**
  * Class CategoriesService.
@@ -14,18 +13,16 @@ use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 class CategoriesService implements CategoriesServiceContract
 {
     /**
-     * @var CategoriesRepositoryContract
+     * @var
      */
-    private $repository;
+    public $repository;
 
     /**
      * CategoriesService constructor.
-     *
-     * @param CategoriesRepositoryContract $repository
      */
-    public function __construct(CategoriesRepositoryContract $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->repository = app()->make('InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract');
     }
 
     /**
