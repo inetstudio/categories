@@ -16,7 +16,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * @var CategoryModelContract
      */
-    private $model;
+    public $model;
 
     /**
      * CategoriesRepository constructor.
@@ -26,6 +26,16 @@ class CategoriesRepository implements CategoriesRepositoryContract
     public function __construct(CategoryModelContract $model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Получаем модель репозитория.
+     *
+     * @return CategoryModelContract
+     */
+    public function getModel()
+    {
+        return $this->model;
     }
 
     /**
@@ -179,16 +189,16 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Родительский объект.
      *
-     * @param CategoryModelContract $item
+     * @param $item
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getParentItem(CategoryModelContract $item, bool $returnBuilder = false)
+    public function getParentItem($item, bool $returnBuilder = false)
     {
         if ($returnBuilder) {
             $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
-                ->where('id', $item->parent_id);
+                ->where('id', $item['parent_id']);
 
             return $builder;
         }
@@ -199,12 +209,12 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Подобъекты.
      *
-     * @param CategoryModelContract $parentItem
+     * @param $parentItem
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getSubItems(CategoryModelContract $parentItem, bool $returnBuilder = false)
+    public function getSubItems($parentItem, bool $returnBuilder = false)
     {
         $builder = $this->getItemsQuery(['title'])
             ->defaultOrder()
@@ -212,7 +222,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
             ->having('depth', '=', 1);
 
         if ($returnBuilder) {
-            $builder = $builder->where('parent_id', $parentItem->id);
+            $builder = $builder->where('parent_id', $parentItem['id']);
 
             return $builder;
         }

@@ -41,12 +41,12 @@ class CategoriesService implements CategoriesServiceContract
     /**
      * Родительский объект.
      *
-     * @param CategoryModelContract $category
+     * @param $category
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getParentCategory(CategoryModelContract $category, bool $returnBuilder = false)
+    public function getParentCategory($category, bool $returnBuilder = false)
     {
         return $this->repository->getParentItem($category, $returnBuilder);
     }
@@ -54,12 +54,12 @@ class CategoriesService implements CategoriesServiceContract
     /**
      * Подобъекты.
      *
-     * @param CategoryModelContract $parentCategory
+     * @param $parentCategory
      * @param bool $returnBuilder
      *
      * @return mixed
      */
-    public function getSubCategories(CategoryModelContract $parentCategory, bool $returnBuilder = false)
+    public function getSubCategories($parentCategory, bool $returnBuilder = false)
     {
         return $this->repository->getSubItems($parentCategory, $returnBuilder);
     }
