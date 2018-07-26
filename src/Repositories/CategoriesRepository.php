@@ -196,14 +196,16 @@ class CategoriesRepository implements CategoriesRepositoryContract
      */
     public function getParentItem($item, bool $returnBuilder = false)
     {
-        if ($returnBuilder) {
-            $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
-                ->where('id', $item['parent_id']);
+        $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
+            ->where('id', $item['parent_id']);
 
+        if ($returnBuilder) {
             return $builder;
         }
 
-        return $item->parent;
+        $item = $builder->first();
+
+        return $item;
     }
 
     /**
