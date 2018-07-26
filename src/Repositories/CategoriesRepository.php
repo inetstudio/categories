@@ -229,7 +229,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
             return $builder;
         }
 
-        return $builder->descendantsOf($parentItem->id);
+        return $builder->descendantsOf($parentItem['id']);
     }
 
     /**
