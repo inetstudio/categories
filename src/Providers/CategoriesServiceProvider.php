@@ -20,7 +20,6 @@ class CategoriesServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
-        $this->registerObservers();
     }
 
     /**
@@ -91,61 +90,5 @@ class CategoriesServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.categories');
-    }
-
-    /**
-     * Регистрация наблюдателей.
-     *
-     * @return void
-     */
-    public function registerObservers(): void
-    {
-        $this->app->make('InetStudio\Categories\Contracts\Models\CategoryModelContract')::observe($this->app->make('InetStudio\Categories\Contracts\Observers\CategoryObserverContract'));
-    }
-
-    /**
-     * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
-     *
-     * @return void
-     */
-    public function registerBindings(): void
-    {
-        // Controllers
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesController');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityControllerContract', 'InetStudio\Categories\Http\Controllers\Back\CategoriesUtilityController');
-
-        // Events
-        $this->app->bind('InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract', 'InetStudio\Categories\Events\Back\ModifyCategoryEvent');
-
-        // Models
-        $this->app->bind('InetStudio\Categories\Contracts\Models\CategoryModelContract', 'InetStudio\Categories\Models\CategoryModel');
-
-        // Observers
-        $this->app->bind('InetStudio\Categories\Contracts\Observers\CategoryObserverContract', 'InetStudio\Categories\Observers\CategoryObserver');
-
-        // Repositories
-        $this->app->bind('InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract', 'InetStudio\Categories\Repositories\CategoriesRepository');
-
-        // Requests
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract', 'InetStudio\Categories\Http\Requests\Back\SaveCategoryRequest');
-
-        // Responses
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\DestroyResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\DestroyResponse');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\FormResponse');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\IndexResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\IndexResponse');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\SaveResponseContract', 'InetStudio\Categories\Http\Responses\Back\Categories\SaveResponse');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\MoveResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\MoveResponse');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SlugResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\SlugResponse');
-        $this->app->bind('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', 'InetStudio\Categories\Http\Responses\Back\Utility\SuggestionsResponse');
-
-        // Services
-        $this->app->bind('InetStudio\Categories\Contracts\Services\Back\CategoriesObserverServiceContract', 'InetStudio\Categories\Services\Back\CategoriesObserverService');
-        $this->app->bind('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract', 'InetStudio\Categories\Services\Back\CategoriesService');
-        $this->app->bind('InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract', 'InetStudio\Categories\Services\Front\CategoriesService');
-
-        // Transformers
-        $this->app->bind('InetStudio\Categories\Contracts\Transformers\Back\SuggestionTransformerContract', 'InetStudio\Categories\Transformers\Back\SuggestionTransformer');
-        $this->app->bind('InetStudio\Categories\Contracts\Transformers\Back\TreeTransformerContract', 'InetStudio\Categories\Transformers\Back\TreeTransformer');
-        $this->app->bind('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract', 'InetStudio\Categories\Transformers\Front\CategoriesSiteMapTransformer');
     }
 }
