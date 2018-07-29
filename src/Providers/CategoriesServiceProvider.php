@@ -23,16 +23,6 @@ class CategoriesServiceProvider extends ServiceProvider
     }
 
     /**
-     * Регистрация привязки в контейнере.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        $this->registerBindings();
-    }
-
-    /**
      * Регистрация команд.
      *
      * @return void
