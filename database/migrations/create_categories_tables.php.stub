@@ -18,16 +18,19 @@ class CreateCategoriesTables extends Migration
             NestedSet::columns($table);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index('slug');
         });
 
         Schema::create('categorizables', function (Blueprint $table) {
             $table->integer('category_model_id')->unsigned();
-            $table->integer('categorizable_id')->unsigned();
-            $table->string('categorizable_type');
+            $table->morphs('categorizable');
             $table->timestamps();
 
             $table->unique(['category_model_id', 'categorizable_id', 'categorizable_type'], 'categorizables_ids_type_unique');
             $table->foreign('category_model_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+
+            $table->index(['categorizable_id', 'categorizable_type']);
         });
     }
 
