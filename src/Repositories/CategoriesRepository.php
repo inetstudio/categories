@@ -63,6 +63,18 @@ class CategoriesRepository implements CategoriesRepositoryContract
     }
 
     /**
+     * Возвращаем удаленный объект по id, либо пустой.
+     *
+     * @param int $id
+     *
+     * @return CategoryModelContract
+     */
+    public function getTrashedItemByID(int $id): CategoryModelContract
+    {
+        return $this->model::onlyTrashed()->find($id) ?? new $this->model;
+    }
+
+    /**
      * Возвращаем объекты по списку id.
      *
      * @param $ids

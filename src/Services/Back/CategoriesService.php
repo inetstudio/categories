@@ -107,14 +107,15 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function destroy(int $id): ?bool
     {
-        $className = get_class($this->repository->model);
-
         $result = $this->repository->destroy($id);
 
         if ($result) {
-            event(app()->makeWith('InetStudio\Categories\Contracts\Events\Back\DeleteCategoryEventContract', [
-                'className' => $className,
-                'id' => $id,
+            $trashedItem = $this->repository->getTrashedItemByID($id);
+
+            event(app()->makeWith('InetStudio\Categories\Contracts\Events\Back\ModifyCategoryEventContract', [
+                'object' => $trashedItem,
+                'oldParent' => $trashedItem->parent,
+                'newParent' => null,
             ]));
         }
 
