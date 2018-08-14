@@ -14,6 +14,7 @@ use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\Meta\Contracts\Models\Traits\MetableContract;
+use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
@@ -31,8 +32,11 @@ class CategoryModel extends Model implements CategoryModelContract, MetableContr
     }
     use SluggableScopeHelpers;
     use HasSimpleCountersTrait;
+    use HasDynamicRelationships;
 
     const HREF = '/category/';
+
+    protected $config = 'categories';
 
     protected $images = [
         'config' => 'categories',
