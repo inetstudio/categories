@@ -4,7 +4,6 @@ namespace InetStudio\Categories\Services\Front;
 
 use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
-use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
 
 /**
@@ -29,39 +28,43 @@ class CategoriesService implements CategoriesServiceContract
      * Получаем объект по slug.
      *
      * @param string $slug
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
      *
      * @return mixed
      */
-    public function getCategoryBySlug(string $slug, bool $returnBuilder = false)
+    public function getCategoryBySlug(string $slug, array $properties = [], array $with = [])
     {
-        return $this->repository->getItemBySlug($slug, $returnBuilder);
+        return $this->repository->getItemBySlug($slug, $properties, $with);
     }
 
     /**
      * Родительский объект.
      *
      * @param $category
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
      *
      * @return mixed
      */
-    public function getParentCategory($category, bool $returnBuilder = false)
+    public function getParentCategory($category, array $properties = [], array $with = [])
     {
-        return $this->repository->getParentItem($category, $returnBuilder);
+        return $this->repository->getParentItem($category, $properties, $with);
     }
 
     /**
      * Подобъекты.
      *
      * @param $parentCategory
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getSubCategories($parentCategory, bool $returnBuilder = false)
+    public function getSubCategories($parentCategory, array $properties = [], array $with = [], array $sort = [])
     {
-        return $this->repository->getSubItems($parentCategory, $returnBuilder);
+        return $this->repository->getSubItems($parentCategory, $properties, $with, $sort);
     }
 
     /**
@@ -71,7 +74,7 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSiteMapItems(): array
     {
-        $items = $this->repository->getAllItems();
+        $items = $this->repository->getAllItems(['created_at', 'updated_at'], [], ['created_at' => 'desc']);
 
         $resource = app()->make('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract')
             ->transformCollection($items);

@@ -11,19 +11,15 @@ trait CategoriesRepositoryTrait
      * Получаем объекты по категории.
      *
      * @param string $slug
-     * @param array $extColumns
+     * @param array $properties
      * @param array $with
-     * @param bool $returnBuilder
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getItemsByCategory(string $slug, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getItemsByCategory(string $slug, array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery($extColumns, $with)->withCategories($slug);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($properties, $with, $sort)->withCategories($slug);
 
         return $builder->get();
     }
@@ -32,19 +28,15 @@ trait CategoriesRepositoryTrait
      * Получаем объекты из категорий.
      *
      * @param $categories
-     * @param array $extColumns
+     * @param array $properties
      * @param array $with
-     * @param bool $returnBuilder
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getItemsFromCategories($categories, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getItemsFromCategories($categories, array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery($extColumns, $with)->withCategories($categories, 'categories.slug');
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($properties, $with, $sort)->withCategories($categories, 'categories.slug');
 
         return $builder->get();
     }
@@ -53,19 +45,15 @@ trait CategoriesRepositoryTrait
      * Получаем объекты из любых категорий.
      *
      * @param $categories
-     * @param array $extColumns
+     * @param array $properties
      * @param array $with
-     * @param bool $returnBuilder
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getItemsByAnyCategory($categories, array $extColumns = [], array $with = [], bool $returnBuilder = false)
+    public function getItemsByAnyCategory($categories, array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery($extColumns, $with)->withAnyCategories($categories, 'categories.slug');
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($properties, $with, $sort)->withAnyCategories($categories, 'categories.slug');
 
         return $builder->get();
     }

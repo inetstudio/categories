@@ -27,7 +27,7 @@ class CategoriesUtilityController extends Controller implements CategoriesUtilit
         $name = $request->get('name');
         $slug = ($name) ? SlugService::createSlug(app()->make('InetStudio\Categories\Contracts\Models\CategoryModelContract'), 'slug', $name) : '';
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SlugResponseContract', [
+        return app()->makeWith(SlugResponseContract::class, [
             'slug' => $slug,
         ]);
     }
@@ -47,7 +47,7 @@ class CategoriesUtilityController extends Controller implements CategoriesUtilit
         $data = app()->make('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract')
             ->getSuggestions($search, $type);
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', [
+        return app()->makeWith(SuggestionsResponseContract::class, [
             'suggestions' => $data,
         ]);
     }
@@ -66,7 +66,7 @@ class CategoriesUtilityController extends Controller implements CategoriesUtilit
         $result = app()->make('InetStudio\Categories\Services\Back\CategoriesService')
             ->rebuildTree($data);
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Utility\MoveResponseContract', [
+        return app()->makeWith(MoveResponseContract::class, [
             'result' => $result,
         ]);
     }

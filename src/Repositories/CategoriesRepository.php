@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
-use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 
 /**
  * Class CategoriesRepository.
@@ -45,7 +44,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return mixed
      */
-    public function getEmptyObjectById(int $id)
+    public function getEmptyObjectById(int $id = 0)
     {
         return $this->model::select(['id'])->where('id', '=', $id)->first();
     }
@@ -57,7 +56,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return CategoryModelContract
      */
-    public function getItemByID(int $id): CategoryModelContract
+    public function getItemByID(int $id = 0): CategoryModelContract
     {
         return $this->model::find($id) ?? new $this->model;
     }
@@ -69,7 +68,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return CategoryModelContract
      */
-    public function getTrashedItemByID(int $id): CategoryModelContract
+    public function getTrashedItemByID(int $id = 0): CategoryModelContract
     {
         return $this->model::onlyTrashed()->find($id) ?? new $this->model;
     }
@@ -78,18 +77,16 @@ class CategoriesRepository implements CategoriesRepositoryContract
      * Возвращаем объекты по списку id.
      *
      * @param $ids
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getItemsByIDs($ids, bool $returnBuilder = false)
+    public function getItemsByIDs($ids, array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery()
+        $builder = $this->getItemsQuery($properties, $with, $sort)
             ->whereIn('id', (array) $ids);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
 
         return $builder->get();
     }
@@ -97,20 +94,15 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Сохраняем объект.
      *
-     * @param SaveCategoryRequestContract $request
+     * @param array $data
      * @param int $id
      *
      * @return CategoryModelContract
      */
-    public function save(SaveCategoryRequestContract $request, int $id): CategoryModelContract
+    public function save(array $data = [], int $id = 0): CategoryModelContract
     {
         $item = $this->getItemByID($id);
-
-        $item->name = strip_tags($request->get('name'));
-        $item->slug = strip_tags($request->get('slug'));
-        $item->title = strip_tags($request->get('title'));
-        $item->description = $request->input('description.text');
-        $item->content = $request->input('content.text');
+        $item->fill($data);
         $item->save();
 
         return $item;
@@ -123,7 +115,7 @@ class CategoriesRepository implements CategoriesRepositoryContract
      *
      * @return bool
      */
-    public function destroy($id): ?bool
+    public function destroy($id = 0): ?bool
     {
         return $this->getItemByID($id)->delete();
     }
@@ -154,17 +146,15 @@ class CategoriesRepository implements CategoriesRepositoryContract
      * Ищем объекты.
      *
      * @param array $conditions
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
+     * @param array $sort
      *
      * @return mixed
      */
-    public function searchItems(array $conditions, bool $returnBuilder = false)
+    public function searchItems(array $conditions, array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery([])->where($conditions);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($properties, $with, $sort)->where($conditions);
 
         return $builder->get();
     }
@@ -172,18 +162,15 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Получаем все объекты.
      *
-     * @param bool $returnBuilder
-     *
+     * @param array $properties
+     * @param array $with
+     * @param array $sort
+     * 
      * @return mixed
      */
-    public function getAllItems(bool $returnBuilder = false)
+    public function getAllItems(array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery(['created_at', 'updated_at'])
-            ->orderBy('created_at', 'desc');
-
-        if ($returnBuilder) {
-            return $builder;
-        }
+        $builder = $this->getItemsQuery($properties, $with, $sort);
 
         return $builder->get();
     }
@@ -192,18 +179,15 @@ class CategoriesRepository implements CategoriesRepositoryContract
      * Получаем объект по slug.
      *
      * @param string $slug
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
      *
      * @return mixed
      */
-    public function getItemBySlug(string $slug, bool $returnBuilder = false)
+    public function getItemBySlug(string $slug, array $properties = [], array $with = [])
     {
-        $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
+        $builder = $this->getItemsQuery($properties, $with)
             ->whereSlug($slug);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
 
         $item = $builder->first();
 
@@ -214,18 +198,15 @@ class CategoriesRepository implements CategoriesRepositoryContract
      * Родительский объект.
      *
      * @param $item
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
      *
      * @return mixed
      */
-    public function getParentItem($item, bool $returnBuilder = false)
+    public function getParentItem($item, array $properties = [], array $with = [])
     {
-        $builder = $this->getItemsQuery(['parent_id', 'title', 'description', 'content'], ['meta', 'media'])
+        $builder = $this->getItemsQuery($properties, $with)
             ->where('id', $item['parent_id']);
-
-        if ($returnBuilder) {
-            return $builder;
-        }
 
         $item = $builder->first();
 
@@ -236,22 +217,18 @@ class CategoriesRepository implements CategoriesRepositoryContract
      * Подобъекты.
      *
      * @param $parentItem
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getSubItems($parentItem, bool $returnBuilder = false)
+    public function getSubItems($parentItem, array $properties = [], array $with = [], array $sort = [])
     {
-        $builder = $this->getItemsQuery(['title'])
+        $builder = $this->getItemsQuery($properties, $with, $sort)
             ->defaultOrder()
             ->withDepth()
             ->having('depth', '=', 1);
-
-        if ($returnBuilder) {
-            $builder = $builder->where('parent_id', $parentItem['id']);
-
-            return $builder;
-        }
 
         return $builder->descendantsOf($parentItem['id']);
     }
@@ -259,12 +236,13 @@ class CategoriesRepository implements CategoriesRepositoryContract
     /**
      * Возвращаем запрос на получение объектов.
      *
-     * @param array $extColumns
+     * @param array $properties
      * @param array $with
+     * @param array $sort
      *
      * @return Builder
      */
-    protected function getItemsQuery($extColumns = [], $with = []): Builder
+    public function getItemsQuery(array $properties = [], array $with = [], array $sort = []): Builder
     {
         $defaultColumns = ['id', 'name', 'slug', 'created_at'];
 
@@ -278,7 +256,13 @@ class CategoriesRepository implements CategoriesRepositoryContract
             },
         ];
 
-        return $this->model::select(array_merge($defaultColumns, $extColumns))
+        $builder = $this->model::select(array_merge($defaultColumns, $properties))
             ->with(array_intersect_key($relations, array_flip($with)));
+
+        foreach ($sort as $column => $direction) {
+            $builder->orderBy($column, $direction);
+        }
+
+        return $builder;
     }
 }

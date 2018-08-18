@@ -20,7 +20,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
      *
      * @var array
      */
-    private $services;
+    public $services;
 
     /**
      * CategoriesController constructor.
@@ -39,7 +39,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
     {
         $tree = $this->services['categories']->getTree();
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\IndexResponseContract', [
+        return app()->makeWith(IndexResponseContract::class, [
             'data' => compact('tree'),
         ]);
     }
@@ -54,7 +54,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
         $item = $this->services['categories']->getCategoryObject();
         $tree = $this->services['categories']->getTree();
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract', [
+        return app()->makeWith(FormResponseContract::class, [
             'data' => compact('item', 'tree'),
         ]);
     }
@@ -78,12 +78,12 @@ class CategoriesController extends Controller implements CategoriesControllerCon
      *
      * @return FormResponseContract
      */
-    public function edit($id = 0): FormResponseContract
+    public function edit(int $id = 0): FormResponseContract
     {
         $item = $this->services['categories']->getCategoryObject($id);
         $tree = $this->services['categories']->getTree();
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\FormResponseContract', [
+        return app()->makeWith(FormResponseContract::class, [
             'data' => compact('item', 'tree'),
         ]);
     }
@@ -113,7 +113,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
     {
         $item = $this->services['categories']->save($request, $id);
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\SaveResponseContract', [
+        return app()->makeWith(SaveResponseContract::class, [
             'item' => $item,
         ]);
     }
@@ -129,7 +129,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
     {
         $result = $this->services['categories']->destroy($id);
 
-        return app()->makeWith('InetStudio\Categories\Contracts\Http\Responses\Back\Categories\DestroyResponseContract', [
+        return app()->makeWith(DestroyResponseContract::class, [
             'result' => ($result === null) ? false : $result,
         ]);
     }

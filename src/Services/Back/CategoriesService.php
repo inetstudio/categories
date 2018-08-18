@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Session;
 use League\Fractal\Serializer\DataArraySerializer;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract;
-use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContract;
 
 /**
@@ -16,18 +15,16 @@ use InetStudio\Categories\Contracts\Http\Requests\Back\SaveCategoryRequestContra
 class CategoriesService implements CategoriesServiceContract
 {
     /**
-     * @var CategoriesRepositoryContract
+     * @var
      */
-    private $repository;
+    public $repository;
 
     /**
      * CategoriesService constructor.
-     *
-     * @param CategoriesRepositoryContract $repository
      */
-    public function __construct(CategoriesRepositoryContract $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->repository = app()->make('InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract');
     }
 
     /**
@@ -46,13 +43,15 @@ class CategoriesService implements CategoriesServiceContract
      * Получаем объекты по списку id.
      *
      * @param array|int $ids
-     * @param bool $returnBuilder
+     * @param array $properties
+     * @param array $with
+     * @param array $sort
      *
      * @return mixed
      */
-    public function getCategoriesByIDs($ids, bool $returnBuilder = false)
+    public function getCategoriesByIDs($ids, array $properties = [], array $with = [], array $sort = [])
     {
-        return $this->repository->getItemsByIDs($ids, $returnBuilder);
+        return $this->repository->getItemsByIDs($ids, $properties, $with, $sort);
     }
 
     /**
@@ -66,7 +65,7 @@ class CategoriesService implements CategoriesServiceContract
     public function save(SaveCategoryRequestContract $request, int $id): CategoryModelContract
     {
         $action = ($id) ? 'отредактирована' : 'создана';
-        $item = $this->repository->save($request, $id);
+        $item = $this->repository->save($request->only($this->repository->getModel()->getFillable()), $id);
 
         $oldParent = $item->parent;
 
