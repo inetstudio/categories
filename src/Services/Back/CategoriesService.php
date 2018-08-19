@@ -43,15 +43,13 @@ class CategoriesService implements CategoriesServiceContract
      * Получаем объекты по списку id.
      *
      * @param array|int $ids
-     * @param array $properties
-     * @param array $with
-     * @param array $sort
+     * @param array $params
      *
      * @return mixed
      */
-    public function getCategoriesByIDs($ids, array $properties = [], array $with = [], array $sort = [])
+    public function getCategoriesByIDs($ids, array $params = [])
     {
-        return $this->repository->getItemsByIDs($ids, $properties, $with, $sort);
+        return $this->repository->getItemsByIDs($ids, $params);
     }
 
     /**

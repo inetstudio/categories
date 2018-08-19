@@ -28,43 +28,39 @@ class CategoriesService implements CategoriesServiceContract
      * Получаем объект по slug.
      *
      * @param string $slug
-     * @param array $properties
-     * @param array $with
+     * @param array $params
      *
      * @return mixed
      */
-    public function getCategoryBySlug(string $slug, array $properties = [], array $with = [])
+    public function getCategoryBySlug(string $slug, array $params = [])
     {
-        return $this->repository->getItemBySlug($slug, $properties, $with);
+        return $this->repository->getItemBySlug($slug, $params);
     }
 
     /**
      * Родительский объект.
      *
      * @param $category
-     * @param array $properties
-     * @param array $with
+     * @param array $params
      *
      * @return mixed
      */
-    public function getParentCategory($category, array $properties = [], array $with = [])
+    public function getParentCategory($category, array $params = [])
     {
-        return $this->repository->getParentItem($category, $properties, $with);
+        return $this->repository->getParentItem($category, $params);
     }
 
     /**
      * Подобъекты.
      *
      * @param $parentCategory
-     * @param array $properties
-     * @param array $with
-     * @param array $sort
+     * @param array $params
      *
      * @return mixed
      */
-    public function getSubCategories($parentCategory, array $properties = [], array $with = [], array $sort = [])
+    public function getSubCategories($parentCategory, array $params = [])
     {
-        return $this->repository->getSubItems($parentCategory, $properties, $with, $sort);
+        return $this->repository->getSubItems($parentCategory, $params);
     }
 
     /**
@@ -74,7 +70,10 @@ class CategoriesService implements CategoriesServiceContract
      */
     public function getSiteMapItems(): array
     {
-        $items = $this->repository->getAllItems(['created_at', 'updated_at'], [], ['created_at' => 'desc']);
+        $items = $this->repository->getAllItems([
+            'columns' => ['created_at', 'updated_at'],
+            'order' => ['created_at' => 'desc'],
+        ]);
 
         $resource = app()->make('InetStudio\Categories\Contracts\Transformers\Front\CategoriesSiteMapTransformerContract')
             ->transformCollection($items);
