@@ -17,7 +17,8 @@ trait CategoriesRepositoryTrait
      */
     public function getItemsByCategory(string $slug, array $params = [])
     {
-        $builder = $this->getItemsQuery($params)->withCategories($slug);
+        $builder = $this->getItemsQuery($params)
+            ->withCategories($slug);
 
         return $builder->get();
     }
@@ -32,7 +33,8 @@ trait CategoriesRepositoryTrait
      */
     public function getItemsFromCategories($categories, array $params = [])
     {
-        $builder = $this->getItemsQuery($params)->withCategories($categories, 'categories.slug');
+        $builder = $this->getItemsQuery($params)
+            ->withCategories($categories, 'categories.slug');
 
         return $builder->get();
     }
@@ -47,7 +49,8 @@ trait CategoriesRepositoryTrait
      */
     public function getItemsByAnyCategory($categories, array $params = [])
     {
-        $builder = $this->getItemsQuery($params)->withAnyCategories($categories, 'categories.slug');
+        $builder = $this->getItemsQuery($params)
+            ->withAnyCategories($categories, 'categories.slug');
 
         return $builder->get();
     }
