@@ -11,15 +11,13 @@ trait CategoriesRepositoryTrait
      * Получаем объекты по категории.
      *
      * @param string $slug
-     * @param array $properties
-     * @param array $with
-     * @param array $sort
+     * @param array $params
      *
      * @return mixed
      */
-    public function getItemsByCategory(string $slug, array $properties = [], array $with = [], array $sort = [])
+    public function getItemsByCategory(string $slug, array $params = [])
     {
-        $builder = $this->getItemsQuery($properties, $with, $sort)->withCategories($slug);
+        $builder = $this->getItemsQuery($params)->withCategories($slug);
 
         return $builder->get();
     }
@@ -28,15 +26,13 @@ trait CategoriesRepositoryTrait
      * Получаем объекты из категорий.
      *
      * @param $categories
-     * @param array $properties
-     * @param array $with
-     * @param array $sort
+     * @param array $params
      *
      * @return mixed
      */
-    public function getItemsFromCategories($categories, array $properties = [], array $with = [], array $sort = [])
+    public function getItemsFromCategories($categories, array $params = [])
     {
-        $builder = $this->getItemsQuery($properties, $with, $sort)->withCategories($categories, 'categories.slug');
+        $builder = $this->getItemsQuery($params)->withCategories($categories, 'categories.slug');
 
         return $builder->get();
     }
@@ -45,15 +41,13 @@ trait CategoriesRepositoryTrait
      * Получаем объекты из любых категорий.
      *
      * @param $categories
-     * @param array $properties
-     * @param array $with
-     * @param array $sort
+     * @param array $params
      *
      * @return mixed
      */
-    public function getItemsByAnyCategory($categories, array $properties = [], array $with = [], array $sort = [])
+    public function getItemsByAnyCategory($categories, array $params = [])
     {
-        $builder = $this->getItemsQuery($properties, $with, $sort)->withAnyCategories($categories, 'categories.slug');
+        $builder = $this->getItemsQuery($params)->withAnyCategories($categories, 'categories.slug');
 
         return $builder->get();
     }
