@@ -129,7 +129,7 @@ trait HasCategories
             ? $categories : static::hydrateCategories($categories)->pluck($column);
 
         return $query->whereHas('categories', function (Builder $query) use ($categories, $column) {
-            $query->whereIn($column, (array) $categories);
+            $query->select(['id', $column])->whereIn($column, (array) $categories);
         });
     }
 
