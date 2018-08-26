@@ -22,8 +22,7 @@
       "laravel": {
         "providers": [
           "InetStudio\\Categories\\Providers\\CategoriesBindingsServiceProvider",
-          "InetStudio\\Categories\\Providers\\CategoriesServiceProvider",
-          "InetStudio\\Categories\\Providers\\FormBuilderServiceProvider"
+          "InetStudio\\Categories\\Providers\\CategoriesServiceProvider"
         ]
       }
     }
