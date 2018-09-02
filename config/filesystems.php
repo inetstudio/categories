@@ -9,8 +9,8 @@ return [
 
     'categories' => [
         'driver' => 'local',
-        'root' => storage_path('app/public/categories/'),
-        'url' => env('APP_URL').'/storage/categories/',
+        'root' => storage_path('app/public/categories'),
+        'url' => env('APP_URL').'/storage/categories',
         'visibility' => 'public',
     ],
 
