@@ -8,6 +8,7 @@ use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
+use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use Venturecraft\Revisionable\RevisionableTrait;
@@ -15,11 +16,10 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\Meta\Contracts\Models\Traits\MetableContract;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
-use Spatie\MediaLibrary\HasMedia\Interfaces\HasMediaConversions;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
-class CategoryModel extends Model implements CategoryModelContract, MetableContract, HasMediaConversions
+class CategoryModel extends Model implements CategoryModelContract, MetableContract, HasMedia
 {
     use Metable;
     use HasImages;
