@@ -64,6 +64,18 @@ class CategoriesService implements CategoriesServiceContract
     }
 
     /**
+     * Получаем все объекты.
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getAllCategories(array $params = [])
+    {
+        return $this->repository->getAllItems($params);
+    }
+
+    /**
      * Получаем информацию по объектам для карты сайта.
      *
      * @return array
