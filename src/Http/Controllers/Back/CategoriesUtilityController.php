@@ -16,6 +16,21 @@ use InetStudio\Categories\Contracts\Http\Controllers\Back\CategoriesUtilityContr
 class CategoriesUtilityController extends Controller implements CategoriesUtilityControllerContract
 {
     /**
+     * Используемые сервисы.
+     *
+     * @var array
+     */
+    public $services;
+
+    /**
+     * CategoriesUtilityController constructor.
+     */
+    public function __construct()
+    {
+        $this->services['categories'] = app()->make('InetStudio\Categories\Contracts\Services\Back\CategoriesServiceContract');
+    }
+
+    /**
      * Получаем slug для модели по строке.
      *
      * @param Request $request
@@ -24,8 +39,12 @@ class CategoriesUtilityController extends Controller implements CategoriesUtilit
      */
     public function getSlug(Request $request): SlugResponseContract
     {
+        $id = (int) $request->get('id');
         $name = $request->get('name');
-        $slug = ($name) ? SlugService::createSlug(app()->make('InetStudio\Categories\Contracts\Models\CategoryModelContract'), 'slug', $name) : '';
+
+        $model = $this->services['categories']->getCategoryObject($id);
+
+        $slug = ($name) ? SlugService::createSlug($model, 'slug', $name) : '';
 
         return app()->makeWith(SlugResponseContract::class, [
             'slug' => $slug,

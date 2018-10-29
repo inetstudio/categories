@@ -145,6 +145,7 @@ class CategoryModel extends Model implements CategoryModelContract, MetableContr
             'slug' => [
                 'source' => 'name',
                 'unique' => true,
+                'includeTrashed' => true,
             ],
         ];
     }
