@@ -5,6 +5,7 @@ namespace InetStudio\Categories\Repositories;
 use Illuminate\Support\Collection;
 use InetStudio\AdminPanel\Repositories\BaseRepository;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
+use InetStudio\AdminPanel\Repositories\Traits\SlugsRepositoryTrait;
 use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
 
 /**
@@ -53,24 +54,6 @@ class CategoriesRepository extends BaseRepository implements CategoriesRepositor
     public function getTree(): Collection
     {
         return $this->model::defaultOrder()->get()->toTree();
-    }
-
-    /**
-     * Получаем объект по slug.
-     *
-     * @param string $slug
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getItemBySlug(string $slug, array $params = [])
-    {
-        $builder = $this->getItemsQuery($params)
-            ->whereSlug($slug);
-
-        $item = $builder->first();
-
-        return $item;
     }
 
     /**

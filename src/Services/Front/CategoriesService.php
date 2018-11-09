@@ -4,37 +4,23 @@ namespace InetStudio\Categories\Services\Front;
 
 use League\Fractal\Manager;
 use League\Fractal\Serializer\DataArraySerializer;
+use InetStudio\AdminPanel\Services\Front\BaseService;
+use InetStudio\AdminPanel\Services\Front\Traits\SlugsServiceTrait;
 use InetStudio\Categories\Contracts\Services\Front\CategoriesServiceContract;
 
 /**
  * Class CategoriesService.
  */
-class CategoriesService implements CategoriesServiceContract
+class CategoriesService extends BaseService implements CategoriesServiceContract
 {
-    /**
-     * @var
-     */
-    public $repository;
+    use SlugsServiceTrait;
 
     /**
      * CategoriesService constructor.
      */
     public function __construct()
     {
-        $this->repository = app()->make('InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract');
-    }
-
-    /**
-     * Получаем объект по slug.
-     *
-     * @param string $slug
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getCategoryBySlug(string $slug, array $params = [])
-    {
-        return $this->repository->getItemBySlug($slug, $params);
+        parent::__construct(app()->make('InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract'));
     }
 
     /**
@@ -45,7 +31,7 @@ class CategoriesService implements CategoriesServiceContract
      *
      * @return mixed
      */
-    public function getParentCategory($category, array $params = [])
+    public function getParentItem($category, array $params = [])
     {
         return $this->repository->getParentItem($category, $params);
     }
@@ -58,21 +44,9 @@ class CategoriesService implements CategoriesServiceContract
      *
      * @return mixed
      */
-    public function getSubCategories($parentCategory, array $params = [])
+    public function getSubItems($parentCategory, array $params = [])
     {
         return $this->repository->getSubItems($parentCategory, $params);
-    }
-
-    /**
-     * Получаем все объекты.
-     *
-     * @param array $params
-     *
-     * @return mixed
-     */
-    public function getAllCategories(array $params = [])
-    {
-        return $this->repository->getAllItems($params);
     }
 
     /**
