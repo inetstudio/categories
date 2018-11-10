@@ -13,6 +13,8 @@ use InetStudio\Categories\Contracts\Repositories\CategoriesRepositoryContract;
  */
 class CategoriesRepository extends BaseRepository implements CategoriesRepositoryContract
 {
+    use SlugsRepositoryTrait;
+    
     /**
      * CategoriesRepository constructor.
      *
