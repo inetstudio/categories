@@ -2,7 +2,7 @@
   "name": "inetstudio-categories",
   "version": "1.7.0",
   "dependencies": {
-    "jstree": "^3.3.5",
+    "jstree": "^3.3.7",
     "nestable2": "^1.6.0"
   }
 }
