@@ -3,15 +3,14 @@
 namespace InetStudio\Categories\Models;
 
 use Cocur\Slugify\Slugify;
-use Laravel\Scout\Searchable;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use InetStudio\Meta\Models\Traits\Metable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
-use Venturecraft\Revisionable\RevisionableTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\Meta\Contracts\Models\Traits\MetableContract;
@@ -19,13 +18,12 @@ use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use InetStudio\Categories\Contracts\Models\CategoryModelContract;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 
-class CategoryModel extends Model implements CategoryModelContract, MetableContract, HasMedia
+class CategoryModel extends Model implements CategoryModelContract, MetableContract, HasMedia, Auditable
 {
     use Metable;
     use HasImages;
-    use Searchable;
     use SoftDeletes;
-    use RevisionableTrait;
+    use \OwenIt\Auditing\Auditable;
     use Sluggable, NodeTrait {
         NodeTrait::replicate as replicateNode;
         Sluggable::replicate as replicateSlug;
@@ -70,7 +68,12 @@ class CategoryModel extends Model implements CategoryModelContract, MetableContr
         'deleted_at',
     ];
 
-    protected $revisionCreationsEnabled = true;
+    /**
+     * Should the timestamps be audited?
+     *
+     * @var bool
+     */
+    protected $auditTimestamps = true;
 
     /**
      * Сеттер атрибута name.
@@ -120,18 +123,6 @@ class CategoryModel extends Model implements CategoryModelContract, MetableContr
     public function setContentAttribute($value)
     {
         $this->attributes['content'] = trim(str_replace("&nbsp;", ' ', (isset($value['text'])) ? $value['text'] : (! is_array($value) ? $value : '')));
-    }
-
-    /**
-     * Настройка полей для поиска.
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        $arr = array_only($this->toArray(), ['id', 'name', 'title', 'description', 'content']);
-
-        return $arr;
     }
 
     /**
