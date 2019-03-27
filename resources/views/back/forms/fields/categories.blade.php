@@ -5,8 +5,8 @@
     $item = $value;
 @endphp
 
-<div class="form-group categories-package">
-    <label for="title" class="col-sm-2 control-label">Категории</label>
+<div class="form-group row categories-package">
+    <label for="title" class="col-sm-2 col-form-label font-bold">Категории</label>
 
     <div class="col-sm-10">
         @if (count($categories) > 0)

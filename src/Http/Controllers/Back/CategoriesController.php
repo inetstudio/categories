@@ -45,7 +45,7 @@ class CategoriesController extends Controller implements CategoriesControllerCon
     }
 
     /**
-     * Добавление объекта.
+     * Создание объекта.
      *
      * @return FormResponseContract
      */

@@ -17,7 +17,7 @@
             <div class="col-lg-12">
                 <div class="ibox float-e-margins categories-package">
                     <div class="ibox-title">
-                        <a href="{{ route('back.categories.create') }}" class="btn btn-sm btn-primary btn-lg">Добавить</a>
+                        <a href="{{ route('back.categories.create') }}" class="btn btn-primary btn-sm">Добавить</a>
                     </div>
                     <div class="ibox-content">
                         <div class="dd categories-list" data-order-url="{{ route('back.categories.move') }}">
