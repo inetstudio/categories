@@ -39,8 +39,8 @@ class ModifyItemEvent implements ModifyItemEventContract
      */
     public function __construct(CategoryModelContract $item = null,
         CategoryModelContract $oldParent = null,
-        CategoryModelContract $newParent = null)
-    {
+        CategoryModelContract $newParent = null
+    ) {
         $this->item = $item;
         $this->oldParent = $oldParent;
         $this->newParent = $newParent;
