@@ -2,7 +2,6 @@
 
 namespace InetStudio\CategoriesPackage\Categories\Models;
 
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OwenIt\Auditing\Auditable;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +10,7 @@ use InetStudio\Meta\Models\Traits\Metable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
@@ -224,7 +224,7 @@ class CategoryModel extends Model implements CategoryModelContract
     }
 
     /**
-     * Разрешение конфликта трейтов Sluggable, NodeTrait
+     * Разрешение конфликта трейтов Sluggable, NodeTrait.
      *
      * @param  array|null  $except
      *
