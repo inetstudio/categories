@@ -1,28 +1,31 @@
 {
-    "name": "inetstudio/categories",
-    "description": "Package for categories",
-    "homepage": "https://github.com/inetstudio/categories",
-    "license": "MIT",
-    "authors": [
-      {
-        "name": "Konstantin Bukin",
-        "email": "bukin@inetstudio.ru"
-      }
-    ],
-    "require": {
-      "kalnoy/nestedset": "^4.3"
-    },
-    "autoload": {
-      "psr-4": {
-        "InetStudio\\Categories\\": "src/"
-      }
-    },
-    "extra": {
-      "laravel": {
-        "providers": [
-          "InetStudio\\Categories\\Providers\\CategoriesBindingsServiceProvider",
-          "InetStudio\\Categories\\Providers\\CategoriesServiceProvider"
-        ]
-      }
+  "name": "inetstudio/categories",
+  "description": "Package for categories",
+  "homepage": "https://github.com/inetstudio/categories",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Konstantin Bukin",
+      "email": "bukin@inetstudio.ru"
     }
+  ],
+  "require": {
+    "inetstudio/admin-panel": "1.8.*",
+    "kalnoy/nestedset": "^4.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "InetStudio\\CategoriesPackage\\": "package/src",
+      "InetStudio\\CategoriesPackage\\Categories\\": "entities/categories/src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "InetStudio\\CategoriesPackage\\Providers\\ServiceProvider",
+        "InetStudio\\CategoriesPackage\\Categories\\Providers\\BindingsServiceProvider",
+        "InetStudio\\CategoriesPackage\\Categories\\Providers\\ServiceProvider"
+      ]
+    }
+  }
 }
