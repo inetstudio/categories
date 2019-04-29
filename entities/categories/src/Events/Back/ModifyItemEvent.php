@@ -33,11 +33,12 @@ class ModifyItemEvent implements ModifyItemEventContract
      *
      * ModifyItemEvent constructor.
      *
-     * @param CategoryModelContract $item
-     * @param CategoryModelContract $oldParent
-     * @param CategoryModelContract $newParent
+     * @param  CategoryModelContract  $item
+     * @param  CategoryModelContract  $oldParent
+     * @param  CategoryModelContract  $newParent
      */
-    public function __construct(CategoryModelContract $item = null,
+    public function __construct(
+        CategoryModelContract $item = null,
         CategoryModelContract $oldParent = null,
         CategoryModelContract $newParent = null
     ) {
