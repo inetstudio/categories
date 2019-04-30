@@ -2,9 +2,7 @@
 
 namespace InetStudio\CategoriesPackage\Categories\Contracts\Services\Front;
 
-use Illuminate\Database\Eloquent\Collection;
 use InetStudio\AdminPanel\Base\Contracts\Services\BaseServiceContract;
-use InetStudio\CategoriesPackage\Categories\Contracts\Models\CategoryModelContract;
 
 /**
  * Interface ItemsServiceContract.
@@ -17,9 +15,9 @@ interface ItemsServiceContract extends BaseServiceContract
      * @param $category
      * @param  array  $params
      *
-     * @return CategoryModelContract|null
+     * @return mixed
      */
-    public function getParentItem($category, array $params = []): ?CategoryModelContract;
+    public function getParentItem($category, array $params = []);
 
     /**
      * Дочерние объекты.
@@ -27,7 +25,7 @@ interface ItemsServiceContract extends BaseServiceContract
      * @param $category
      * @param  array  $params
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getSubItems($category, array $params = []): Collection;
+    public function getSubItems($category, array $params = []);
 }

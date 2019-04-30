@@ -2,7 +2,6 @@
 
 namespace InetStudio\CategoriesPackage\Categories\Services\Front;
 
-use Illuminate\Database\Eloquent\Collection;
 use InetStudio\AdminPanel\Base\Services\BaseService;
 use InetStudio\AdminPanel\Base\Services\Traits\SlugsServiceTrait;
 use InetStudio\CategoriesPackage\Categories\Contracts\Models\CategoryModelContract;
@@ -31,9 +30,9 @@ class ItemsService extends BaseService implements ItemsServiceContract
      * @param $category
      * @param  array  $params
      *
-     * @return CategoryModelContract|null
+     * @return mixed
      */
-    public function getParentItem($category, array $params = []): ?CategoryModelContract
+    public function getParentItem($category, array $params = [])
     {
         return $this->model
             ->buildQuery($params)
@@ -47,9 +46,9 @@ class ItemsService extends BaseService implements ItemsServiceContract
      * @param $category
      * @param  array  $params
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getSubItems($category, array $params = []): Collection
+    public function getSubItems($category, array $params = [])
     {
         return $this->model
             ->buildQuery($params)
