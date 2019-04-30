@@ -2,8 +2,6 @@
 
 namespace InetStudio\CategoriesPackage\Categories\Services\Front\Traits;
 
-use Illuminate\Database\Eloquent\Collection;
-
 /**
  * Trait CategoriesServiceTrait.
  */
@@ -15,9 +13,9 @@ trait CategoriesServiceTrait
      * @param  string  $slug
      * @param  array  $params
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getItemsByCategory(string $slug, array $params = []): Collection
+    public function getItemsByCategory(string $slug, array $params = [])
     {
         return $this->model
             ->buildQuery($params)
@@ -31,9 +29,9 @@ trait CategoriesServiceTrait
      * @param $categories
      * @param  array  $params
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getItemsFromCategories($categories, array $params = []): Collection
+    public function getItemsFromCategories($categories, array $params = [])
     {
         return $this->model
             ->buildQuery($params)
@@ -47,9 +45,9 @@ trait CategoriesServiceTrait
      * @param $categories
      * @param  array  $params
      *
-     * @return Collection
+     * @return mixed
      */
-    public function getItemsByAnyCategory($categories, array $params = []): Collection
+    public function getItemsByAnyCategory($categories, array $params = [])
     {
         return $this->model
             ->buildQuery($params)
