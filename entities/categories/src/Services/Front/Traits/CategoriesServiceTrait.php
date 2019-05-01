@@ -19,8 +19,7 @@ trait CategoriesServiceTrait
     {
         return $this->model
             ->buildQuery($params)
-            ->withCategories($slug)
-            ->get();
+            ->withCategories($slug);
     }
 
     /**
@@ -35,8 +34,7 @@ trait CategoriesServiceTrait
     {
         return $this->model
             ->buildQuery($params)
-            ->withCategories($categories, 'categories.slug')
-            ->get();
+            ->withCategories($categories, 'categories.slug');
     }
 
     /**
@@ -51,7 +49,6 @@ trait CategoriesServiceTrait
     {
         return $this->model
             ->buildQuery($params)
-            ->withAnyCategories($categories, 'categories.slug')
-            ->get();
+            ->withAnyCategories($categories, 'categories.slug');
     }
 }
