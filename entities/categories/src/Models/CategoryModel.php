@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
@@ -33,7 +32,6 @@ class CategoryModel extends Model implements CategoryModelContract
     }
     use SluggableTrait;
     use BuildQueryScopeTrait;
-    use SluggableScopeHelpers;
     use HasSimpleCountersTrait;
     use HasDynamicRelationships;
 
