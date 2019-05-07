@@ -6,11 +6,11 @@ use OwenIt\Auditing\Auditable;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
-use InetStudio\Meta\Models\Traits\Metable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\Uploads\Models\Traits\HasImages;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
@@ -22,7 +22,7 @@ use InetStudio\CategoriesPackage\Categories\Contracts\Models\CategoryModelContra
  */
 class CategoryModel extends Model implements CategoryModelContract
 {
-    use Metable;
+    use HasMeta;
     use HasImages;
     use Auditable;
     use SoftDeletes;

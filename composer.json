@@ -11,6 +11,7 @@
   ],
   "require": {
     "inetstudio/admin-panel": "1.8.*",
+    "inetstudio/meta": "1.8.*",
     "kalnoy/nestedset": "^4.3"
   },
   "autoload": {

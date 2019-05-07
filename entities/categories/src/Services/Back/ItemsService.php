@@ -55,8 +55,9 @@ class ItemsService extends BaseService implements ItemsServiceContract
 
         $newParent = $item->parent;
 
-        app()->make('InetStudio\Meta\Contracts\Services\Back\MetaServiceContract')
-            ->attachToObject(request(), $item);
+        $metaData = Arr::get($data, 'meta', []);
+        app()->make('InetStudio\MetaPackage\Meta\Contracts\Services\Back\ItemsServiceContract')
+            ->attachToObject($metaData, $item);
 
         $images = (config('categories.images.conversions.category')) ? array_keys(
             config('categories.images.conversions.category')
