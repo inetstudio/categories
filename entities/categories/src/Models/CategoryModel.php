@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
-use InetStudio\SimpleCounters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
+use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
 use InetStudio\CategoriesPackage\Categories\Contracts\Models\CategoryModelContract;
 
 /**
