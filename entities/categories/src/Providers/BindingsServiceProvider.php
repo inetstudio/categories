@@ -28,6 +28,7 @@ class BindingsServiceProvider extends BaseServiceProvider implements DeferrableP
         'InetStudio\CategoriesPackage\Categories\Contracts\Models\CategoryModelContract' => 'InetStudio\CategoriesPackage\Categories\Models\CategoryModel',
         'InetStudio\CategoriesPackage\Categories\Contracts\Services\Back\ItemsServiceContract' => 'InetStudio\CategoriesPackage\Categories\Services\Back\ItemsService',
         'InetStudio\CategoriesPackage\Categories\Contracts\Services\Back\UtilityServiceContract' => 'InetStudio\CategoriesPackage\Categories\Services\Back\UtilityService',
+        'InetStudio\CategoriesPackage\Categories\Contracts\Services\Front\FeedsServiceContract' => 'InetStudio\CategoriesPackage\Categories\Services\Front\FeedsService',
         'InetStudio\CategoriesPackage\Categories\Contracts\Services\Front\ItemsServiceContract' => 'InetStudio\CategoriesPackage\Categories\Services\Front\ItemsService',
         'InetStudio\CategoriesPackage\Categories\Contracts\Services\Front\SitemapServiceContract' => 'InetStudio\CategoriesPackage\Categories\Services\Front\SitemapService',
         'InetStudio\CategoriesPackage\Categories\Contracts\Transformers\Back\Utility\SuggestionTransformerContract' => 'InetStudio\CategoriesPackage\Categories\Transformers\Back\Utility\SuggestionTransformer',
