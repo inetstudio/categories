@@ -126,7 +126,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
         $transformer = app()->make(
             'InetStudio\CategoriesPackage\Categories\Contracts\Transformers\Back\TreeTransformerContract'
         );
-        $serializer = app()->make('InetStudio\AdminPanel\Contracts\Serializers\SimpleDataArraySerializerContract');
+        $serializer = app()->make('InetStudio\AdminPanel\Base\Contracts\Serializers\SimpleDataArraySerializerContract');
 
         $resource = $transformer->transformCollection($tree);
 
