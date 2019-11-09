@@ -113,7 +113,6 @@ class CategoryModel extends Model implements CategoryModelContract
             'slug' => [
                 'source' => 'name',
                 'unique' => true,
-                'includeTrashed' => true,
             ],
         ];
     }
