@@ -242,7 +242,6 @@ class CategoryModel extends Model implements CategoryModelContract
         return $instance;
     }
 
-
     /**
      * Handle dynamic method calls into the model.
      *
@@ -253,8 +252,9 @@ class CategoryModel extends Model implements CategoryModelContract
      *
      * @throws BindingResolutionException
      */
-    public function __call($method, $parameters) {
-        $config = implode( '.', ['categories.relationships', $method]);
+    public function __call($method, $parameters)
+    {
+        $config = implode('.', ['categories.relationships', $method]);
 
         if (Config::has($config)) {
             $data = Config::get($config);
@@ -277,7 +277,7 @@ class CategoryModel extends Model implements CategoryModelContract
      */
     public function getAttribute($key)
     {
-        $config = implode( '.', ['categories.relationships', $key]);
+        $config = implode('.', ['categories.relationships', $key]);
 
         if (Config::has($config)) {
             return $this->getRelationValue($key);
@@ -299,7 +299,7 @@ class CategoryModel extends Model implements CategoryModelContract
             return $this->relations[$key];
         }
 
-        $config = implode( '.', ['categories.relationships', $key]);
+        $config = implode('.', ['categories.relationships', $key]);
 
         if (Config::has($config)) {
             return $this->getRelationshipFromMethod($key);
