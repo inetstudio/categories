@@ -4,7 +4,6 @@ namespace InetStudio\CategoriesPackage\Categories\Models;
 
 use OwenIt\Auditing\Auditable;
 use Kalnoy\Nestedset\NodeTrait;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +12,6 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
 use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
@@ -242,71 +240,5 @@ class CategoryModel extends Model implements CategoryModelContract
         (new SlugService())->slug($instance, true);
 
         return $instance;
-    }
-
-    /**
-     * Handle dynamic method calls into the model.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     *
-     * @return mixed
-     *
-     * @throws BindingResolutionException
-     */
-    public function __call($method, $parameters)
-    {
-        $config = implode('.', ['categories.relationships', $method]);
-
-        if (Config::has($config)) {
-            $data = Config::get($config);
-
-            $model = isset($data['model']) ? [app()->make($data['model'])] : [];
-            $params = $data['params'] ?? [];
-
-            return call_user_func_array([$this, $data['relationship']], array_merge($model, $params));
-        }
-
-        return parent::__call($method, $parameters);
-    }
-
-    /**
-     * Get an attribute from the model.
-     *
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function getAttribute($key)
-    {
-        $config = implode('.', ['categories.relationships', $key]);
-
-        if (Config::has($config)) {
-            return $this->getRelationValue($key);
-        }
-
-        return parent::getAttribute($key);
-    }
-
-    /**
-     * Get a relationship.
-     *
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function getRelationValue($key)
-    {
-        if ($this->relationLoaded($key)) {
-            return $this->relations[$key];
-        }
-
-        $config = implode('.', ['categories.relationships', $key]);
-
-        if (Config::has($config)) {
-            return $this->getRelationshipFromMethod($key);
-        }
-
-        return parent::getRelationValue($key);
     }
 }

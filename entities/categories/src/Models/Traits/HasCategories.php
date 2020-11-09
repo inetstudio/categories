@@ -59,7 +59,7 @@ trait HasCategories
      *
      * @throws BindingResolutionException
      */
-    public function setCategoriesAttribute($categories): void
+    public function setCategoriesAttribute($categories, array $data = []): void
     {
         if (! $this->exists) {
             $this->queuedCategories = $categories;
@@ -67,7 +67,7 @@ trait HasCategories
             return;
         }
 
-        $this->attachCategories($categories);
+        $this->attachCategories($categories, $data);
     }
 
     /**
@@ -215,14 +215,15 @@ trait HasCategories
      * Attach the given category(ies) to the model.
      *
      * @param  int|string|array|ArrayAccess|CategoryModelContract  $categories
+     * @param  array $data
      *
      * @return $this
      *
      * @throws BindingResolutionException
      */
-    public function attachCategories($categories): self
+    public function attachCategories($categories, array $data = []): self
     {
-        $this->setCategories($categories, 'syncWithoutDetaching');
+        $this->setCategories($categories, 'syncWithoutDetaching', $data);
 
         return $this;
     }
@@ -231,14 +232,15 @@ trait HasCategories
      * Sync the given category(ies) to the model.
      *
      * @param  int|string|array|ArrayAccess|CategoryModelContract|null  $categories
+     * @param  array $data
      *
      * @return $this
      *
      * @throws BindingResolutionException
      */
-    public function syncCategories($categories): self
+    public function syncCategories($categories, array $data = []): self
     {
-        $this->setCategories($categories, 'sync');
+        $this->setCategories($categories, 'sync', $data);
 
         return $this;
     }
@@ -264,25 +266,30 @@ trait HasCategories
      *
      * @param  int|string|array|ArrayAccess|CategoryModelContract  $categories
      * @param  string  $action
+     * @param  array $data
      *
      * @throws BindingResolutionException
      */
-    protected function setCategories($categories, string $action): void
+    protected function setCategories($categories, string $action, array $data = []): void
     {
         // Fix exceptional event name
         $event = $action === 'syncWithoutDetaching' ? 'attach' : $action;
 
         // Hydrate Categories
-        $categories = $this->hydrateCategories($categories)->pluck('id')->toArray();
+        $categoriesIds = $this->hydrateCategories($categories)->pluck('id')->toArray();
 
         // Fire the Category syncing event
         static::$dispatcher->dispatch('inetstudio.categories.'.$event.'ing', [$this, $categories]);
 
         // Set Categories
+        $categories = [];
+        foreach ($categoriesIds as $categoryId) {
+            $categories[$categoryId] = $data;
+        }
         $this->categories()->$action($categories);
 
         // Fire the Category synced event
-        static::$dispatcher->dispatch('inetstudio.categories.'.$event.'ed', [$this, $categories]);
+        static::$dispatcher->dispatch('inetstudio.categories.'.$event.'ed', [$this, $categoriesIds]);
     }
 
     /**

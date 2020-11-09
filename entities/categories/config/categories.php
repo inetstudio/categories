@@ -42,18 +42,4 @@ return [
             ],
         ],
     ],
-
-    /*
-     * Настройки связей.
-     */
-
-    'relationships' => [
-        'articles' => [
-            'relationship' => 'morphedByMany',
-            'model' => 'InetStudio\Articles\Contracts\Models\ArticleModelContract',
-            'params' => [
-                'categorizable',
-            ],
-        ],
-    ],
 ];

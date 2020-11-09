@@ -163,10 +163,11 @@ class ItemsService extends BaseService implements ItemsServiceContract
      * Присваиваем категории объекту.
      *
      * @param $categories
+     * @param array $data
      *
      * @param $item
      */
-    public function attachToObject($categories, $item): void
+    public function attachToObject($categories, $item, array $data = []): void
     {
         if ($categories instanceof Request) {
             $categories = $categories->get('categories', []);
@@ -177,7 +178,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
         }
 
         if (! empty($categories)) {
-            $item->syncCategories($this->model::whereIn('id', $categories)->get());
+            $item->syncCategories($this->model::whereIn('id', $categories)->get(), $data);
         } else {
             $item->detachCategories($item->categories);
         }
