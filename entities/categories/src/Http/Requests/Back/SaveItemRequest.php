@@ -33,7 +33,7 @@ class SaveItemRequest extends FormRequest implements SaveItemRequestContract
             'meta.description.max' => 'Поле «Description» не должно превышать 255 символов',
             'meta.keywords.max' => 'Поле «Keywords» не должно превышать 255 символов',
 
-            'meta.og:title.max' => 'Поле «og:itle» не должно превышать 255 символов',
+            'meta.og:title.max' => 'Поле «og:title» не должно превышать 255 символов',
             'meta.og:description.max' => 'Поле «og:description» не должно превышать 255 символов',
 
             'og_image.crop.default.json' => 'Область отображения должна быть представлена в виде JSON',

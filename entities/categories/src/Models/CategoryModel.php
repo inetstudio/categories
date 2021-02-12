@@ -2,6 +2,7 @@
 
 namespace InetStudio\CategoriesPackage\Categories\Models;
 
+use Cocur\Slugify\Slugify;
 use OwenIt\Auditing\Auditable;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use InetStudio\Uploads\Models\Traits\HasImages;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
-use InetStudio\AdminPanel\Base\Models\Traits\SluggableTrait;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use InetStudio\AdminPanel\Models\Traits\HasDynamicRelationships;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\SimpleCounters\Counters\Models\Traits\HasSimpleCountersTrait;
@@ -30,7 +31,7 @@ class CategoryModel extends Model implements CategoryModelContract
         NodeTrait::replicate as replicateNode;
         Sluggable::replicate as replicateSlug;
     }
-    use SluggableTrait;
+    use SluggableScopeHelpers;
     use BuildQueryScopeTrait;
     use HasSimpleCountersTrait;
     use HasDynamicRelationships;
@@ -240,5 +241,48 @@ class CategoryModel extends Model implements CategoryModelContract
         (new SlugService())->slug($instance, true);
 
         return $instance;
+    }
+
+    public function customizeSlugEngine(Slugify $engine)
+    {
+        $rules = [
+            'а' => 'a',
+            'б' => 'b',
+            'в' => 'v',
+            'г' => 'g',
+            'д' => 'd',
+            'е' => 'e',
+            'ё' => 'jo',
+            'ж' => 'zh',
+            'з' => 'z',
+            'и' => 'i',
+            'й' => 'j',
+            'к' => 'k',
+            'л' => 'l',
+            'м' => 'm',
+            'н' => 'n',
+            'о' => 'o',
+            'п' => 'p',
+            'р' => 'r',
+            'с' => 's',
+            'т' => 't',
+            'у' => 'u',
+            'ф' => 'f',
+            'х' => 'h',
+            'ц' => 'c',
+            'ч' => 'ch',
+            'ш' => 'sh',
+            'щ' => 'shh',
+            'ъ' => '',
+            'ы' => 'y',
+            'ь' => '',
+            'э' => 'je',
+            'ю' => 'ju',
+            'я' => 'ja',
+        ];
+
+        $engine->addRules($rules);
+
+        return $engine;
     }
 }
