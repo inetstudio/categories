@@ -119,7 +119,7 @@ trait HasCategories
     public function scopeWithAllCategories(Builder $query, $categories, string $column = 'slug'): Builder
     {
         $categories = $this->isCategoriesStringBased($categories)
-            ? $categories : $this->hydrateCategories($categories)->pluck($column);
+            ? $categories : $this->hydrateCategories($categories)->pluck($column)->toArray();
 
         collect($categories)->each(
             function ($category) use ($query, $column) {
@@ -149,7 +149,7 @@ trait HasCategories
     public function scopeWithAnyCategories(Builder $query, $categories, string $column = 'slug'): Builder
     {
         $categories = $this->isCategoriesStringBased($categories)
-            ? $categories : $this->hydrateCategories($categories)->pluck($column);
+            ? $categories : $this->hydrateCategories($categories)->pluck($column)->toArray();
 
         return $query->whereHas(
             'categories',
@@ -189,7 +189,7 @@ trait HasCategories
     public function scopeWithoutCategories(Builder $query, $categories, string $column = 'slug'): Builder
     {
         $categories = $this->isCategoriesStringBased($categories)
-            ? $categories : $this->hydrateCategories($categories)->pluck($column);
+            ? $categories : $this->hydrateCategories($categories)->pluck($column)->toArray();
 
         return $query->whereDoesntHave(
             'categories',
