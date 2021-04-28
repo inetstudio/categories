@@ -106,7 +106,7 @@ class CategoryModel extends Model implements CategoryModelContract
      *
      * @return array
      */
-    public function sluggable()
+    public function sluggable(): array
     {
         return [
             'slug' => [
