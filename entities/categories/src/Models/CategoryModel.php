@@ -8,7 +8,7 @@ use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use InetStudio\Uploads\Models\Traits\HasImages;
+use InetStudio\UploadsPackage\Uploads\Models\Traits\HasMedia;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use InetStudio\MetaPackage\Meta\Models\Traits\HasMeta;
@@ -24,7 +24,7 @@ use InetStudio\CategoriesPackage\Categories\Contracts\Models\CategoryModelContra
 class CategoryModel extends Model implements CategoryModelContract
 {
     use HasMeta;
-    use HasImages;
+    use HasMedia;
     use Auditable;
     use SoftDeletes;
     use Sluggable, NodeTrait {
@@ -59,16 +59,6 @@ class CategoryModel extends Model implements CategoryModelContract
      * @var bool
      */
     protected $auditTimestamps = true;
-
-    /**
-     * Настройки для генерации изображений.
-     *
-     * @var array
-     */
-    protected $images = [
-        'config' => 'categories',
-        'model' => 'category',
-    ];
 
     /**
      * Связанная с моделью таблица.
@@ -284,5 +274,10 @@ class CategoryModel extends Model implements CategoryModelContract
         $engine->addRules($rules);
 
         return $engine;
+    }
+
+    public function getMediaConfig(): array
+    {
+        return config('categories.media', []);
     }
 }
