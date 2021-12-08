@@ -1,5 +1,7 @@
+import {categories} from './package/categories';
+
 require('jstree');
 require('nestable2');
 
-let categories = require('./package/categories');
-categories.init();
+categories.initList();
+categories.initTree();
