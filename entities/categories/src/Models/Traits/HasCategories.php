@@ -281,11 +281,16 @@ trait HasCategories
         // Fire the Category syncing event
         static::$dispatcher->dispatch('inetstudio.categories.'.$event.'ing', [$this, $categories]);
 
-        // Set Categories
-        $categories = [];
-        foreach ($categoriesIds as $categoryId) {
-            $categories[$categoryId] = $data;
+        if ($action === 'detach') {
+            $categories = $categoriesIds;
+        } else {
+            $categories = [];
+            foreach ($categoriesIds as $categoryId) {
+                $categories[$categoryId] = $data;
+            }
         }
+
+        // Set Categories
         $this->categories()->$action($categories);
 
         // Fire the Category synced event
