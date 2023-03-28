@@ -10,9 +10,9 @@
     }
   ],
   "require": {
-    "inetstudio/admin-panel": "^8.0",
-    "inetstudio/meta": "^8.0",
-    "inetstudio/simple-counters": "^8.0",
+    "inetstudio/admin-panel": "^9.0",
+    "inetstudio/meta": "^9.0",
+    "inetstudio/simple-counters": "^9.0",
     "kalnoy/nestedset": "^6.0"
   },
   "autoload": {
